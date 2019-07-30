@@ -1,30 +1,38 @@
-* The Path of GTD Mastery -- from 2015 Updated GTD Book
+#+TITLE: The Path of GTD Mastery -- from 2015 Updated GTD Book
   2019-07-30
 
 ** Chapter 15 intro text
    + GTD is actually a lifelong practice with multiple levels of mastery.
    + It is very similar to playing an instrument like the violin, a sport like
-     tennis, or a game like chess. It's like mathematics, pottery, art history, or even parenting.
+     tennis, or a game like chess. It's like mathematics, pottery, art history,
+     or even parenting.
    + All of these endeavors involve learning and applying a particular set of
-     moves and techniques, and there's no end to how good you can become at them, or how many subtleties there are to explore.
+     moves and techniques, and there's no end to how good you can become at
+     them, or how many subtleties there are to explore.
    + GTD is the art of dealing with the stream of life's work and engagements,
-     which is constantly evolving for all of us. It's about identifying and navigating yoru commitments and interests from a
-     state of confidence and flow. Your work and focus will change, often dramatically, over time.
+     which is constantly evolving for all of us. It's about identifying and
+     navigating yoru commitments and interests from a state of confidence and
+     flow. Your work and focus will change, often dramatically, over time.
    + But engaging with it all masterfully is a defined practice that can be
      learned and refined over a lifetime.
    + Mastery does not refer to some final end state of a Zen-like peacefulness
      and enlightenment on a mountaintop. Rather, it's the demonstrated ability
      to consistently engage in productive behaviors as a means to achieve clarity,
-     stability, and focus when it's desired or required -- no matter what the challenge.
-   + How well you have developed that ability will be tested when you're confronted with things that are unclear, unstable,
-     and distracting, which are natural and normal symptoms of change in your world.
-   + GTD mastery involves learning and incorporating its various best practices, and then integrating them in a holistic manner,
-     which results in a much more dynamic experience than simply the sum of its parts.
-   + When you learn to play tennis, you focus on specific components of its moves, like the backhand, the forehand, the lob, and the serve.
-   + When you actually play a game of tennis, you then put them all together. As you increase your mastery, your focus matures
-     to encompass an overall strategy.
-   + Similarly, mastering GTD involves an initial mastery of its segments, techniques, and tools, and then incorporating them
-     as you play your whole life and work game.
+     stability, and focus when it's desired or required -- no matter what the
+     challenge.
+   + How well you have developed that ability will be tested when you're
+     confronted with things that are unclear, unstable, and distracting, which
+     are natural and normal symptoms of change in your world.
+   + GTD mastery involves learning and incorporating its various best practices,
+     and then integrating them in a holistic manner, which results in a much
+     more dynamic experience than simply the sum of its parts.
+   + When you learn to play tennis, you focus on specific components of its
+     moves, like the backhand, the forehand, the lob, and the serve.
+   + When you actually play a game of tennis, you then put them all together. As
+     you increase your mastery, your focus matures to encompass an overall strategy.
+   + Similarly, mastering GTD involves an initial mastery of its segments,
+     techniques, and tools, and then incorporating them as you play your whole
+     life and work game.
    + Your expertise will be reflected in your using an optimally integrated
      system and approach, without thinking about it.
 
