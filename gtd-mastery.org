@@ -1,0 +1,343 @@
+* The Path of GTD Mastery -- from 2015 Updated GTD Book
+  2019-07-30
+
+** Chapter 15 intro text
+   + GTD is actually a lifelong practice with multiple levels of mastery.
+   + It is very similar to playing an instrument like the violin, a sport like
+     tennis, or a game like chess. It's like mathematics, pottery, art history, or even parenting.
+   + All of these endeavors involve learning and applying a particular set of
+     moves and techniques, and there's no end to how good you can become at them, or how many subtleties there are to explore.
+   + GTD is the art of dealing with the stream of life's work and engagements,
+     which is constantly evolving for all of us. It's about identifying and navigating yoru commitments and interests from a
+     state of confidence and flow. Your work and focus will change, often dramatically, over time.
+   + But engaging with it all masterfully is a defined practice that can be
+     learned and refined over a lifetime.
+   + Mastery does not refer to some final end state of a Zen-like peacefulness
+     and enlightenment on a mountaintop. Rather, it's the demonstrated ability
+     to consistently engage in productive behaviors as a means to achieve clarity,
+     stability, and focus when it's desired or required -- no matter what the challenge.
+   + How well you have developed that ability will be tested when you're confronted with things that are unclear, unstable,
+     and distracting, which are natural and normal symptoms of change in your world.
+   + GTD mastery involves learning and incorporating its various best practices, and then integrating them in a holistic manner,
+     which results in a much more dynamic experience than simply the sum of its parts.
+   + When you learn to play tennis, you focus on specific components of its moves, like the backhand, the forehand, the lob, and the serve.
+   + When you actually play a game of tennis, you then put them all together. As you increase your mastery, your focus matures
+     to encompass an overall strategy.
+   + Similarly, mastering GTD involves an initial mastery of its segments, techniques, and tools, and then incorporating them
+     as you play your whole life and work game.
+   + Your expertise will be reflected in your using an optimally integrated
+     system and approach, without thinking about it.
+
+** The Three Tiers of Mastery
+   + Over the many years of engaging with people who have adopted the GTD
+     methodology, I have noted generally three stages of maturity in using the model:
+     1. Employing the fundamentals of managing workflow;
+     2. Implementing a more elevated and integrated total life management system;
+     3. Leveraging skills to create clear space and get things done for an
+        ever-expansive expression and manifestation.
+   + A good analogy here is the experience of learning to drive a car.
+     + The frist stage is getting the basics under control, so that you can
+       handle the machine without hurting yourself or anyone else. The moves
+       feel awkward and often counterintuitive.
+     + But once you're good enough to get your license, your world changes
+       dramatically for the better, because now you can go places and do things
+       that you couldn't previously.
+     + Then there comes a time when you are able to drive down a road without
+       actually thinking about the act of driving -- it's become and automatic
+       part of your life.
+     + And finally, you decide to graduate to a really high-performance vehicle,
+       in which the prime challenge and opportunity is how well you can focus
+       ahead, making yourself essentially one with your vehicle, experiencing
+       elevated levels of satisfaction and fulfillment with driving.
+   + Each of those stages is represented by the horizons of your focus and the
+     application of specific techniques.
+     + At first you're making what look like small, jerky movements but what are
+       actually very smooth movements focused on very short horizons.
+     + Then, as you gain comfort and familiarity with the process, you extend
+       your focus on to the next street corner or freeway exit.
+     + Then you can graduate to a more conscious and directed focus at multiple
+       horizons, driving across town with total situational awareness.
+     + Similarly, as the techniques of Getting Things Done become increasingly
+       second nature, you shift your attention from the mechanics of your system
+       to the results it produces.
+
+** Mastering the Basics
+   + As simple as they may seem at first, building proficiency with the
+     fundamental components of Getting Things Done -- the basics -- can take a while.
+   + Though it's easy to understand and agree with its concepts and principles,
+     putting them into practice is not necessarily a smooth or automatic process.
+   + It's the same as with any soophisticated practice -- driving a car,
+     throwing a karate punch, or playing the flute -- the beginning moves are
+     not familiar or comfortable. Once you've done them a thousand times,
+     however, you can manifest elegance, power, and fluidity that would be
+     inacessible any other way.
+   + The same may be true for you about learning GTD.
+   + For example, capturing _everything_ potentially meaningful into trusted
+     external buckets is a behavior that can be as daunting to employ as
+     learning to manually shift easily in a car. Writing things down is itself
+     not a new skill, but rather a practice that can easily seem unworthy of the
+     effort. Becoming sensitized to the need to externalize those kinds of
+     thoughts as well as building the habit to actually carry out the necessary
+     actions with a ubiquitous tool at hand, without exception, is the real challenge.
+   + Other basic practices, which easily regress into incomplete, out-of-date,
+     and therefore dysfunctional usage, include:
+     + Avoiding next-action decision making on "stuff to do".
+     + Fully utilizing the "Waiting For" category, such that _every_ expected
+       deliverable from others is inventoried and reviewed for follow-up in
+       adequate timing
+     + Using Agenda lists to capture and manage communications with others
+     + Keeping a simple, easily accessible filing and reference system
+     + Keeping the calendar as pure "hard landscape" without undermining its
+       trustworthiness with extraneous inputs
+     + Doing Weekly Reviews to keep one's system functional and current
+
+** It's Easy to Get Off Track
+   + GTD is not that difficult to get started.
+   + At some point, though, the rest of your reality will inevitably come
+     flooding at you full force, and if the new practices haven't yet had time
+     to root themselves in your behavior patterns, it's relatively easy to get
+     blown off course.
+   + Most people are so used to keeping things in their heads that it's very
+     easy to slip back into that familiar pattern.
+   + Deciding next actions requires a thrust of cognitive effort that
+     seductively can be avoided if a particular situation is not in some
+     critical mode.
+   + Making time for the Weekly Review, if it's not been instituted as a habit,
+     can be a daunting challenge.
+   + All of that begins to result in a personal system that is incomplete and
+     out of date -- you'll no longer be able to trust your lists to give you the
+     whole picture, and because the system is not really relieving pressure,
+     you'll conclude it's not worth keeping up with anymore, and you might as
+     well take it back into your head.
+   + In those circumstances it's not uncommon for someone to wander off the
+     track exponentially quickly.
+
+** ...and Easy to Get Back On
+   + The good news is that it's easy to get back /into/ your productive groove
+     as it may have been to get knocked out of it.
+   + It simply requires revisiting the basics:
+     + Get a pen and paper and empty your head again
+     + Identify and add new projects and next actions to bring your lists current
+     + Clean up what's leaked outside your system
+   + This cycle of getting off track and getting back on again happens to almost
+     everyone -- particularly during this first level of mastering the basics of
+     the game.
+   + In my experience it can easily take as long as two years to finally get
+     this stage of practice fully integrated into one's life and work style, and
+     consistently maintained.
+   + Another piece of good news is that even if a person has gleaned only a few
+     concepts from this material, or has not implemented the system regularly,
+     it can bring marked improvement.
+   + Of course, the more those techniques begin to work together as a whole,
+     systematically and consistently, the more dramatic will be the increase in
+     the experience of relaxed, focused control.
+   + Mastering the basics is transformative for most everyone who achieves it.
+     If you reach that stage, you will be getting many more things done, more
+     quickly and more easily, and operating with greatly increased confidence in
+     how you're dealing with the operational details of life.
+   + At this first tier of GTD mastery you will be generally keeping yourself
+     under control and focused on an hour-by-hour, day-by-day basis.
+
+** Graduate Level -- Integrated Life Management
+   + At this point, you are ready to graduate to the next level -- having your
+     hand on the helm of your life on a week-to-week, month-to-month (and even
+     longer) basis. This requires a more subtle level of awareness and practice.
+   + As I mentioned earlier, as you get better at driving a car, you are able to
+     extend your horizon, which creates smoother moves, and you can focus more
+     on where you're going than on the mechanism that's getting you there.
+   + Similarly, when you reach a certain level of maturity with the GTD process,
+     you won't be as focused on the system itself or how you're working it, but
+     will utilize it in more flexible, customized ways, as your trusted tool to
+     facilitate control and focus over longer and larger spans.
+   + Whereas the first level of mastery involves [many details and tools], this
+     next tier is concerned with getting rigorous with the bigger issues that
+     are driving the contents of the basic level. These specific actions and
+     information exist because of their relevance to things larger than
+     themselves -- the projects we have to complete, the problems we need to
+     solve, the areas of focus and interest we have in our complex lives.
+     + Why are you getting that email?
+     + What's the purpose of that meeting, and why do you have to attend?
+     + What projects need to become Someday/Maybes, and vice versa -- because of
+       the larger changes going on?
+   + Mastery of the fundamentals, which provides the basics of effective and
+     efficient execution, also provides the ability and room to address a higher
+     level of control and focus: projects, and how they are identified, managed,
+     and understood in relation to one another and to the larger frameworks
+     within which we operate.
+   + Developing comfort with an external mind frees up and leverages one's
+     cognitive abilities, paving the way for many more creative and productive
+     uses of an integrated self-management system.
+   + The hallmarks of this next level of maturity with GTD are:
+     + a complete, current, and clear inventory of projects;
+     + a working map of one's roles, accountabilities, and interests --
+       personally and professionally;
+     + an integrated total life management system, custom tailored to one's
+       current needs and direction and utilized to dynamically steer out beyond
+       the day-to-day; and
+     + challenges and surprises trigger your utilization of this methodology
+       instead of throwing you out of it.
+
+** When Projects Become the Heartbeat of Your Operational System
+   + Further down the path of mastering this methodology, you will reach a stage
+     at which your Projects list becomes more the driver, rather than a
+     reflection, of your Next Action lists, and your projects themselves will
+     become a truer reflection of your roles, areas of focus, and interests.
+   + At this point, the center of gravity of your self-management system will
+     have moved from Ground-level horizon to somewhere between Horizon 1
+     (Projects) and Horizon 2 (Areas of Focus).
+   + Though it is central to an ongoing experience of stress-free productivity,
+     very few people -- even among those who have been engaged with GTD for
+     years -- actually walk around with a complete inventory of their projects,
+     objectively and regularly reviewed. Those who do reach this level, however,
+     and come to realize its power, make _that_ the principle list from which
+     they navigate.
+   + Given my broad definition of "project" (any outcome requiring more than one
+     step that you're committed to achieve within a year), it might be
+     challenging enough for you to delineate all of those, even if they are clear.
+   + But the real expression of maturity here is the inclusion of the more
+     subtle desired outcomes definable as doable events (e.g. "Clarifiy Frank's
+     new role on the team").
+   + A signpost of GTD mastery at this stage -- and, indeed /life/ mastery -- is
+     when one recognizes /anything/ that has his attention (concerns, worries,
+     problems, issues, tensions) and translates them into achievable outcomes
+     (projects), to be executed with concrete next actions.
+   + Most people resist acknowledging issues and opportunities until they know
+     they can be handled successfully, not realizing that exploring, looking
+     into, or in some way accepting or putting something to bed because there is
+     no solution is an appropriate outcome (project) itself. The ability to
+     create appropriate engagement with the role of a new team member, or your
+     daughter's math grades, etc -- no matter how ambiguous or unclear the
+     actual path for achieving each may be -- by identifying the inherent
+     project and taking steps to resolve it is quite an extraordinary and mature
+     self-management practice.
+
+** Assessing and Populating Your Projects List from Your Areas of Focus
+   + Whenever people actually produce a checklist for this horizon -- the areas
+     of professional and personal focus they can identify -- they invariably
+     realize that there are more projects they need to add.
+   + They will also usually realize that they have not been paying appropriate
+     attention to some aspect of either their work or their personal life, or
+     both, and they are motivated to bring more balance and wholeness to their
+     Projects list.
+
+** An Integrated Total Life-Management System
+   + The third aspect of this stage of mastery is that your system will have
+     become not just a conglomeration of various lists, information,
+     applications, and tools -- but rather a cohesive "control room" with all
+     its components working together to engage effectively with whatever
+     circumstance arises.
+   + You will have attained the ability to customize your lists and categories,
+     and how you use them, in response to changes in your world and your own
+     increasing sophistication with the possibilities.
+   + You understand the essence and recognize the value of the various parts of
+     the model and therefore have the freedom to tailor how they are implemented
+     to best serve your needs. You could build your own application of the GTD
+     system from scratch, if need be, with your own tools at hand.
+   + You're not at a loss about what to do with anything -- a business card you
+     collected at a lunch meeting, a harebrained idea you woke up with this
+     morning about a project you might want to launch, an unexpected private
+     invitation to a major gala event, or your blood panel report from your last
+     medical checkup. You can create the right placeholder for any type of
+     potentially meaningful data.
+   + You can also easily get a sense of your priorities for an upcoming trip,
+     you have everything you need at hand for the next webinar you're
+     conducting, it would take minimal effort to pull together a company
+     overview for your bank, and you can quickly create a rich context for a
+     family conversation about plans for the next two years.
+   + You have a dynamic, working dashboard that serves your orientation for
+     virtually any context -- whether at home, at the office, or in transit -- seamlessly.
+
+** Pressure Produces Greater Rather Than Reduced Utilization of These Practices
+   + One of the most common observations I hear from people who have at some
+     point bought into the GTD process but have not progressed particularly far
+     with it is that they fell away from it because they had an intense series
+     of back-to-back business trips, or an extended bout of the flu, or an
+     unexpected crisis occur, etc.
+   + And one of the most common things I hear from people who /have/ matured
+     with their application of and experience with the methodology is that
+     applying GTD is the very thing that enabled them to negotiate these kinds
+     of tense situations with much more effectiveness and much less stress.
+   + A significant hallmark of progress in the path of mastery at this stage is
+     that very transition point when issues and opportunities galvanize GTD
+     practices instead of causing its users to abandon them.
+   + When a new problem explodes at work, you can get back in control quickly
+     with a new mind sweep instead of taking everything back up in your head.
+   + You identify desired outcomes, projects, and next actions about this
+     circumstance as soon as you can, as opposed to simply worrying about what's happened.
+   + You actually do a Weekly Review in the middle of the week because you need
+     that kind of elevated focus to recalibrate your work, instead of reverting
+     back to latest-and-loudest as your priority criterion.
+   + Operating at this level of GTD mastery is achievable and truly elegant. The
+     experience, for those who do achieve it, is one of /establishing the
+     conditions to flourish/.
+
+** Postgraduate: Focus, Direction, and Creativity
+   + Once you have incorporated the basic elements of GTD and integrated the
+     more elevated aspects of your commitments of life and work into a trusted
+     and customized systematic approach, the next frontier opens: using clear
+     internal space to optimize your experience, ad infinitum.
+   + Once you really know and trust you can and will execute effectively
+     anything that lands in your in-tray, you will have the freedom to toss
+     /anything/ into your own in-tray -- whether it's your next crazy idea, a
+     possible new technology to research, or a book you might want to write.
+   + The ability to put your attention on the more subtle and elevated levels of
+     your life and work to a large degree depends on your being able to put to
+     bed the inevitably necessary more operational and mundane aspects that,
+     without your appropriate engagement, can easily distract and exhaust your
+     creative focus.
+   + The lack of pervasive angst about the details of your daily life also makes
+     it much easier to shift your attention to the direction and qualities of
+     experience that really matter.
+   + This is the stage of maturity along the GTD path of mastery in which the
+     simple idea of checklists takes on sublime significance. Your mind is
+     terrible at recalling things out of the blue, but it is fantastic at doing
+     creative thinking about what it has directly in front of it to evaluate.
+     + When freed from the remembering function, the mind is a fabulous
+       mechanism to put into play by putting things "in front of the door" so
+       you don't have to think too hard about what to think about.
+     + How often would you like to be reminded to think about your significant
+       family members?
+     + What, specifically, would be good to remind yourself to think about when
+       you think about your partner, your son, your sister?
+     + Whom would you consider to be on your A-list in your professional network
+       (the people whose influence and interactions with you are most valuable)?
+       How often should you view that list?
+     + What affirmations and inspirational writings would serve you to reconnect
+       with, and at what intervals?
+   + There are obviously an infinite number of opportunities any of us could
+     take advantage of to add value to our world, with the right kind of
+     structure established to relieve our psyche of the jobs it does not do well
+     and to leverage what it does wonderfully. But that will not happen by itself.
+   + It is a hallmark of this advanced level of GTD mastery that you recognize
+     that dynamic adn use your intelligence to leverage itself. It's having the
+     freedom to generate and develop ideas, without constraint, and then
+     utilizing the practice of processing and organizing those notes and
+     thoughts appropriately. It's the smartest people who realize they are only
+     randomly in their "smarts" and inspired. They're the ones who intelligently
+     build in systems and processes to take advantage of the brilliance that
+     often simply lies sleeping behind the dullness required to deal with the
+     brutish world we inhabit.
+
+** Conclusion
+   + This path of GTD mastery -- incorporating the fundamentals, utilizing an
+     elevated and integrated system, and leveraging creative directional focus
+     -- is not actually as limited sequentially as I have laid it out.
+   + But in my experience, when the whole gestalt of stress-free productivity is
+     taken into consideration, it requires a solid progression that does not
+     have shortcuts.
+   + You can't really maintain a sense of week-to-week control if your email is
+     in chaos.
+   + You won't really be free to engage with your long-range planning or vision
+     if you don't have a grip on the current reality of the actual inventory of
+     your 75 projects.
+   + You are continually involved in all of these levels, consciously or
+     unconsciously, explicitly or implicitly. You have appointments, projects,
+     actions, goals, and values, and as a professional you will find that your
+     work has its own set of commitments within which you must operate.
+   + Your mastery of GTD will simply reflect the elegant equanimity with which
+     you are engaged with /all/ of them.
+   + That unexpected email with the major problem that just appeared, your
+     aunt's birthday this week, the potential change in strategy for your
+     company, and the new piece of cookware you realize you want -- each is
+     dealt with quickly, smoothly, and in an appropriate context, leaving
+     nothing on your mind other than what's present in the moment.
