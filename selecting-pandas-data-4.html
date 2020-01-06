@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <!-- Title and description ================================================== -->
+    
+              <meta name="csrf-param" content="authenticity_token">
+              <meta name="csrf-token" content="qdEKGkJb3D6Ei8rMORI4jxMBhrsP2RMUrPHNavEwjUaEanEzKpXfg4rQaqmhByHrzfzmR88TGMyh93495xNr2Q==">
+            
+    <title>
+      
+        Selecting Subsets of Data in Pandas: Part 4
+      
+    </title>
+    <meta charset="utf-8" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+
+    <!-- Helpers ================================================== -->
+    <meta property="og:type" content="website">
+<meta property="og:url" content="https://www.dunderdata.com/blog/selecting-subsets-of-data-in-pandas-part-4">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:title" content="Selecting Subsets of Data in Pandas: Part 4">
+<meta name="twitter:title" content="Selecting Subsets of Data in Pandas: Part 4">
+
+
+
+<meta property="og:image" content="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/sites/59203/images/GwYueLDyQPqBVDJxfbW9_swc.png">
+<meta name="twitter:image" content="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/sites/59203/images/GwYueLDyQPqBVDJxfbW9_swc.png">
+
+
+    <link href="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/settings_images/cPKNEPCZRRKWPYFXm8mC_DD_favicon_white_space.png?v=2" rel="shortcut icon" />
+    <link rel="canonical" href="https://www.dunderdata.com/blog/selecting-subsets-of-data-in-pandas-part-4" />
+
+    <!-- CSS ================================================== -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    
+      <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700,400italic,700italic|Montserrat:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" media="screen" href="https://ap-kajabi-storefronts-production.global.ssl.fastly.net/assets/core-36d711acd6b6b6ebec34a694a9eef8bf1660c6ae66a0df925956db2bc4a92888.css" />
+    <link rel="stylesheet" media="screen" href="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/assets/styles.css?15776651586601868" />
+    <link rel="stylesheet" media="screen" href="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/assets/overrides.css?15776651586601868" />
+
+    <!-- Full Bleed Or Container ================================================== -->
+    
+
+    <!-- Header hook ================================================== -->
+    <link rel="alternate" type="application/rss+xml" title="Ted Petrou&#39;s Python Data Science and Machine Learning Tutorials" href="https://www.dunderdata.com/blog.rss" /><script style="text/javascript">
+  var Kajabi = Kajabi || {};
+</script>
+<script style="text/javascript">
+  Kajabi.currentSiteUser = {
+    "id" : "-1",
+    "type" : "Guest"
+  };
+</script>
+<script style="text/javascript">
+  Kajabi.theme = {
+    activeThemeName: "Premier Site",
+    previewThemeId: null,
+    editor: false
+  };
+</script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)
+},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119777567-4', 'auto');
+ga('send', 'pageview');
+</script>
+<style type="text/css">
+  #editor-overlay {
+    display: none;
+    border-color: #2E91FC;
+    position: absolute;
+    background-color: rgba(46,145,252,0.05);
+    border-style: dashed;
+    border-width: 3px;
+    border-radius: 3px;
+    pointer-events: none;
+    cursor: pointer;
+    z-index: 10000000000;
+  }
+  .editor-overlay-button {
+    color: white;
+    background: #2E91FC;
+    border-radius: 2px;
+    font-size: 13px;
+    margin-left: -24px;
+    margin-top: -12px;
+    padding: 3px 10px;
+    text-transform:uppercase;
+    font-weight:bold;
+    letter-spacing:1.5px;
+
+    left: 50%;
+    top: 50%;
+    position: absolute;
+  }
+</style>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GN9DJ2');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+ fbq('init', '2224829977846603'); 
+fbq('track', 'PageView');
+</script>
+<noscript>
+ <img height="1" width="1" 
+src="https://www.facebook.com/tr?id=2224829977846603&ev=PageView
+&noscript=1"/>
+</noscript>
+<!-- End Facebook Pixel Code -->
+
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GN9DJ2"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div class="container container--main">
+      <div class="content-wrap">
+        <div id="section-header" data-section-id="header"><!-- Header Variables -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- KJB Settings Variables -->
+
+
+
+
+
+<style>
+  .header {
+    background: #fff;
+  }
+  
+  .header .logo--text, .header--left .header-menu a {
+    line-height: 40px;
+  }
+  .header .logo--image {
+    height: 40px;
+  }
+  .header .logo img {
+    max-height: 40px;
+  }
+  .announcement {
+      background: #2e91fc;
+      color: #fff;
+    }
+  /*============================================================================
+    #Header User Menu Styles
+  ==============================================================================*/
+  .header .user__dropdown {
+    background: #fff;
+    top: 71px;
+  }
+  .header--center .user__dropdown {
+    top: 50px;
+  }
+  
+  /*============================================================================
+    #Header Responsive Styles
+  ==============================================================================*/
+  @media (max-width: 767px) {
+    .header .logo--text {
+      line-height: 40px;
+    }
+    .header .logo--image {
+      max-height: 40px;
+    }
+    .header .logo img {
+      max-height: 40px;
+    }
+    .header .header-ham {
+      top: 20px;
+    }
+  }
+</style>
+
+
+
+  <!-- Announcement Variables -->
+
+
+
+
+
+
+<!-- KJB Settings Variables -->
+
+
+<style>
+  .announcement {
+    background: #2e91fc;
+    color: #fff;
+  }
+  a.announcement:hover {
+    color: #fff;
+  }
+</style>
+
+
+
+  <div class="header header--light header--left" kjb-settings-id="sections_header_settings_background_color">
+    <div class="container">
+      
+        <a href="/" class="logo logo--image">
+          <img src="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/settings_images/NyrRjGSTnWKumhv2A6X6_gray_and_green_only.png" kjb-settings-id="sections_header_settings_logo"/>
+        </a>
+      
+      <div class="header-ham">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div kjb-settings-id="sections_header_settings_menu" class="header-menu">
+        
+          
+            <a href="https://www.dunderdata.com/online-courses">Online Courses</a>
+          
+            <a href="https://www.dunderdata.com/in-person-courses">In-Person Courses</a>
+          
+            <a href="https://www.dunderdata.com/live-online-courses">Live Online Courses</a>
+          
+            <a href="https://www.dunderdata.com/corporate">Corporate</a>
+          
+            <a href="https://www.dunderdata.com/blog">Blog</a>
+          
+        
+        
+        <!-- User Dropdown Variables -->
+
+
+
+
+
+<!-- KJB Settings Variables -->
+
+
+
+
+
+
+  <span kjb-settings-id="sections_header_settings_language_login"><a href="/login">Login</a></span>
+
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+        
+
+
+        <div id="" class="section section--global">
+  <div class="container">
+    <div class="row section__row">
+      <div class="section__body col-lg-9">
+        <div id="section-blog_post_body" data-section-id="blog_post_body"><div class="panel blog fluid-video">
+  <div class="panel__body">
+    <h1 class="blog__title">Selecting Subsets of Data in Pandas: Part 4</h1>
+    <div class="blog__info">
+      
+        <span class="blog__tags" kjb-settings-id="sections_blog_post_body_settings_show_tags">
+          
+            
+              <a href="https://www.dunderdata.com/blog?tag=pandas">pandas</a>
+            
+          
+        </span>
+      
+      
+        <span class="blog__date" kjb-settings-id="sections_blog_post_body_settings_show_date">Jun 30, 2019</span>
+      
+      
+    </div>
+    
+    
+  
+
+
+    <p id="e6c3" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">This article is available as a&nbsp;<a class="bu bq lt lu lv lw" href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/04%20How%20NOT%20to%20select%20subsets%20of%20data.ipynb" target="_blank" rel="noopeneer noopener noreferrer">Jupyter Notebook</a>&nbsp;complete with exercises at the bottom to practice and&nbsp;<a class="bu bq lt lu lv lw" href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/Solutions.ipynb" target="_blank" rel="noopeneer noopener noreferrer">detailed solutions</a>&nbsp;in another notebook. All material will be contained in my&nbsp;<a class="bu bq lt lu lv lw" href="https://github.com/tdpetrou/Learn-Pandas" target="_blank" rel="noopeneer noopener noreferrer">Learn-Pandas Github repository</a>.</p>
+<p id="42c7" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">This is the fourth and final part of the series &ldquo;How to Select Subsets of Data in Pandas&rdquo;. Pandas offers a wide variety of options for subset selection, which necessitates multiple articles. This series is broken down into the following topics.</p>
+<ol class="">
+<li id="b01f" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls my mq mr" data-selectable-paragraph=""><a class="bu bq lt lu lv lw" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopeneer noopener noreferrer">Selection with&nbsp;</a><code class="kb mz na nb nc b"><a class="bu bq lt lu lv lw" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopeneer noopener noreferrer">[]</a></code><a class="bu bq lt lu lv lw" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopeneer noopener noreferrer">,&nbsp;</a><code class="kb mz na nb nc b"><a class="bu bq lt lu lv lw" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopeneer noopener noreferrer">.loc</a></code><a class="bu bq lt lu lv lw" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopeneer noopener noreferrer">&nbsp;and&nbsp;</a><code class="kb mz na nb nc b"><a class="bu bq lt lu lv lw" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopeneer noopener noreferrer">.iloc</a></code></li>
+<li id="dcf3" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls my mq mr" data-selectable-paragraph=""><a class="bu bq lt lu lv lw" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-39e811c81a0c" target="_blank" rel="noopeneer noopener noreferrer">Boolean indexing</a></li>
+<li id="d48d" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls my mq mr" data-selectable-paragraph=""><a class="bu bq lt lu lv lw" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-part-3-d5704b4b9116" target="_blank" rel="noopeneer noopener noreferrer">Assigning subsets of data</a></li>
+<li id="80b3" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls my mq mr" data-selectable-paragraph="">How NOT to select subsets of data</li>
+</ol>
+<h3 id="09d2" class="kl km cc ax aw fb kn ko kp kq kr ks kt ku kv kw kx">Learn Data Science with Python</h3>
+<p id="e95e" class="ld le cc ax lf b lg lh li lj lk ll lm ln lo lp lq" data-selectable-paragraph="">I have several&nbsp;<a class="bl cr lz ma mb mc" href="http://dunderdata.com/" target="_blank" rel="noopener noreferrer">online and in-person courses available on dunderdata.com</a>&nbsp;to teach you Python, data science, and machine learning.</p>
+<h4 id="ec31" class="mi km cc ax aw fb mj mk ml mm mn mo mp mq mr ms mt">Online Courses</h4>
+<ul class="">
+<li id="6fa1" class="ld le cc ax lf b lg lh li lj lk ll lm ln lo lp lq mu lx ly" data-selectable-paragraph=""><a class="bl cr lz ma mb mc" href="https://www.dunderdata.com/master-data-analysis-with-python" target="_blank" rel="noopener noreferrer">Master Data Analysis with Python</a>&nbsp;&mdash; a comprehensive course with access to over 500 pages of text, 300 exercises, 13 hours of video, multiple projects, and detailed solutions</li>
+<li id="908f" class="ld le cc ax lf b lg md li me lk mf lm mg lo mh lq mu lx ly" data-selectable-paragraph=""><a class="bl cr lz ma mb mc" href="https://dunderdata.com/exercise-python" target="_blank" rel="noopener noreferrer">Exercise Python</a>&nbsp;&mdash; master the fundamentals of Python with access to over 300 pages of text, 150 exercises, multiple projects and detailed solutions</li>
+<li id="bfc9" class="ld le cc ax lf b lg md li me lk mf lm mg lo mh lq mu lx ly" data-selectable-paragraph=""><a class="bl cr lz ma mb mc" href="https://www.dunderdata.com/intro-to-pandas" target="_blank" rel="noopener noreferrer">Intro to Pandas</a>&nbsp;&mdash; FREE course to get started. 5.5 hours of video, nearly 50 exercises</li>
+<li id="c6dd" class="ld le cc ax lf b lg md li me lk mf lm mg lo mh lq mu lx ly" data-selectable-paragraph=""><a class="bl cr lz ma mb mc" href="https://www.dunderdata.com/all-access-pass" target="_blank" rel="noopener noreferrer">All Access Pass!&nbsp;</a>&mdash; Get lifetime access to all current and future online courses for one low price!</li>
+</ul>
+<h4 id="2175" class="mi km cc ax aw fb mj mk ml mm mn mo mp mq mr ms mt">In-Person Courses</h4>
+<ul class="">
+<li id="2dac" class="ld le cc ax lf b lg lh li lj lk ll lm ln lo lp lq mu lx ly" data-selectable-paragraph="">Take a&nbsp;<a class="bl cr lz ma mb mc" href="https://www.dunderdata.com/in-person-courses" target="_blank" rel="noopener noreferrer">hands-on, interactive, in-person class</a>&nbsp;with me</li>
+</ul>
+<h4 id="a278" class="mi km cc ax aw fb mj mk ml mm mn mo mp mq mr ms mt">Social Media</h4>
+<p id="cd0f" class="ld le cc ax lf b lg lh li lj lk ll lm ln lo lp lq" data-selectable-paragraph="">I frequently post my python data science thoughts on social media. Follow me!</p>
+<ul class="">
+<li id="d23b" class="ld le cc ax lf b lg lr li ls lk lt lm lu lo lv lq mu lx ly" data-selectable-paragraph=""><a class="bl cr lz ma mb mc" href="https://twitter.com/tedpetrou" target="_blank" rel="noopener noreferrer">Twitter @TedPetrou</a></li>
+<li id="8561" class="ld le cc ax lf b lg md li me lk mf lm mg lo mh lq mu lx ly" data-selectable-paragraph=""><a class="bl cr lz ma mb mc" href="https://www.linkedin.com/in/tedpetrou/" target="_blank" rel="noopener noreferrer">LinkedIn Ted Petrou</a></li>
+<li id="1ba0" class="ld le cc ax lf b lg md li me lk mf lm mg lo mh lq mu lx ly" data-selectable-paragraph=""><a class="bl cr lz ma mb mc" href="https://facebook.com/dunderdata" target="_blank" rel="noopener noreferrer">Facebook Dunder Data</a></li>
+</ul>
+<h4 id="3330" class="mi km cc ax aw fb mj mk ml mm mn mo mp mq mr ms mt">Corporate Training</h4>
+<p id="dabd" class="ld le cc ax lf b lg lh li lj lk ll lm ln lo lp lq" data-selectable-paragraph="">If you have a group at your company looking to learn directly from an expert who understands how to teach and motivate students, l<a class="bl cr lz ma mb mc" href="https://www.dunderdata.com/corporate" target="_blank" rel="noopener noreferrer">et me know by filling out the form on this page.</a></p>
+<h3 id="a918" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj">Learning what not to do</h3>
+<p class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">In all programming languages, and especially pandas, the number of incorrect or inefficient ways to complete a task heavily outnumbers the efficient or&nbsp;<strong class="lh mx">idiomatic</strong>&nbsp;ones.&nbsp;</p>
+<p class="p1"><span class="s1">The term idiomatic refers to code that is efficient, easy to understand, and a common way (among experts) to accomplish a task in a particular library/language.</span></p>
+<p class="p1"><span class="s1">The first three parts of this series showed the idiomatic way of making selections. In this section, we will cover the most common ways users incorrectly make subset selections. Some of these bad habits might be perfectly acceptable in other Python libraries but will be unacceptable with pandas.</span></p>
+<h3 id="3f43" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj">Getting the right answer with the wrong code</h3>
+<p id="6243" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">One of the issues that prevent users from learning idiomatic pandas, is that it is still possible to get the correct final result while using highly inefficient and non-idiomatic code. Completing a task isn&rsquo;t necessarily indicative that your code is correct.</p>
+<p id="d7ad" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Here are a few reasons why a solution that gives the correct result might not be good:</p>
+<ul class="">
+<li id="f72f" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls mp mq mr" data-selectable-paragraph="">A slow solution might not scale to larger data</li>
+<li id="3f3b" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">A solution might work in this particular instance but fail with slightly different data</li>
+<li id="388c" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">A solution might be very fast, but hard to interpret by others</li>
+</ul>
+<h3 id="f9ae" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj">Chained indexing with lists</h3>
+<p id="8357" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">&nbsp;</p>
+<p class="p1"><span class="s1"><strong>Chained indexing</strong>&nbsp;is the first and most important subset selection problem we will discuss. Chained indexing occurs whenever two subset selections immediately following each other.</span></p>
+<p id="21ca" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">To help simplify the idea, we will look at chained indexing with Python lists. Let&rsquo;s first create a list of integers:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="b6b7" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a = [1, 5, 10, 3, 99, 5, 8, 20, 40]<br />&gt;&gt;&gt; a<br />[1, 5, 10, 3, 99, 5, 8, 20, 40]</span></pre>
+<p id="88d2" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s make a normal subset selection by slicing from integer location 2 to 6.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="a56a" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a[2:6]<br />[10, 3, 99, 5]</span></pre>
+<p id="06ed" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">Chained indexing occurs whenever we make another subset selection immediately following this one. Let&rsquo;s select the first element from this new list in a single line of code:</mark></p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="e7ed" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a[2:6][0]<br />10</span></pre>
+<p id="f13b" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">This is an example of chained indexing.</mark></p>
+<h3 id="7bab" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj">Assigning a new value to a list with chained indexing</h3>
+<p id="f8a1" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s say, we wanted to change this value that was selected from above from 10 to 50. Let&rsquo;s attempt to do this assignment with chained indexing:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="121c" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a[2:6][0] = 50<br />&gt;&gt;&gt; a<br />[1, 5, 10, 3, 99, 5, 8, 20, 40]</span></pre>
+<h3 id="f917" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj">Nothing happened???</h3>
+<p id="e70d" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">As you can see, the list&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a</strong></code></mark><mark class="qi qj qk">&nbsp;was not modified at all. The reason for this, is that Python created a temporary intermediate list directly after the first subset selection.&nbsp;</mark><mark class="qi qj qk">It might be easier to write out the execution of the above into two separate steps:</mark></p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="6213" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a_temp = a[2:6]<br />&gt;&gt;&gt; a_temp[0] = 50<br />&gt;&gt;&gt; a_temp<br />[50, 3, 99, 5]</span><span id="dc12" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a<br />[1, 5, 10, 3, 99, 5, 8, 20, 40]</span></pre>
+<h1 id="6783" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph=""><mark class="qi qj qk">The temporary object was the only one modified</mark></h1>
+<p id="b07b" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">As you can see, the intermediate object,&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">a_temp</strong></code>, was the only object modified. The original was left untouched.</p>
+<h1 id="2753" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">But doesn&rsquo;t Python modify objects that are the &lsquo;same&rsquo;?</h1>
+<p id="2579" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s take a look at a closely related example where Python will modify two variables at the &lsquo;same&rsquo; time. Let&rsquo;s create a new list,&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">a1</strong></code>&nbsp;and set it equal to&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">b1</strong></code>&nbsp;and then modify the first element of it:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="6b9b" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a1 = [0, 1, 2, 3]<br />&gt;&gt;&gt; b1 = a1<br />&gt;&gt;&gt; b1[0] = 99<br />&gt;&gt;&gt; b1<br />[<mark class="qi qj qk">99</mark>, 1, 2, 3]</span><span id="95c1" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a1<br />[<mark class="qi qj qk">99</mark>, 1, 2, 3]</span></pre>
+<h1 id="2503" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Both have changed!?!</h1>
+<p id="aa04" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">In the above example, we made a single call to change the first element of&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">b1</strong></code></mark><mark class="qi qj qk">. This modified both&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">b1</strong></code></mark><mark class="qi qj qk">&nbsp;and&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a1</strong></code></mark><mark class="qi qj qk">.&nbsp;</mark><mark class="qi qj qk">This happened because&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a1</strong></code></mark><mark class="qi qj qk">&nbsp;and&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">b1</strong></code></mark><mark class="qi qj qk">&nbsp;are&nbsp;</mark><mark class="qi qj qk">referring to the exact same object in memory.</mark><mark class="qi qj qk">&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a1</strong></code></mark><mark class="qi qj qk">&nbsp;and&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">b1</strong></code></mark><mark class="qi qj qk">&nbsp;are simply&nbsp;</mark><mark class="qi qj qk"><strong class="lh mx">names</strong></mark><mark class="qi qj qk">&nbsp;that are used to refer to the underlying objects, which in this case, are the same.</mark></p>
+<h1 id="4181" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Proof they are the same with the&nbsp;<code class="kb mz na nb nc b">id</code>&nbsp;function</h1>
+<p id="cb36" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">We can prove that&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a1</strong></code></mark><mark class="qi qj qk">&nbsp;and&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">b1</strong></code></mark><mark class="qi qj qk">&nbsp;are referring to the same object with the built-in&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">id</strong></code></mark><mark class="qi qj qk">&nbsp;function, which returns the memory address of the object.</mark></p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="4702" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; id(a1)<br />4501625608</span><span id="b7ec" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; id(b1)<br />4501625608</span><span id="cc49" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a1 is b1<br />True</span></pre>
+<h1 id="1a00" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">So, why did our assignment with chained indexing fail?</h1>
+<p id="c1cc" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">Whenever you take a slice of a list, Python creates a brand new&nbsp;</mark><mark class="qi qj qk"><strong class="lh mx">copy</strong></mark><mark class="qi qj qk">&nbsp;(a shallow-copy to be exact) of the data. A copy of an object is completely unrelated to the original and has it&rsquo;s own place in memory.</mark></p>
+<p id="64de" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">Whenever we write&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a[2:6]</strong></code></mark><mark class="qi qj qk">, the result of this is a brand new list object in memory unrelated to the list&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a</strong></code></mark><mark class="qi qj qk">. The statement&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a[2:6][0] = 50</strong></code></mark><mark class="qi qj qk">&nbsp;does actually make an assignment to that temporary list copy, but it is not saved to a variable, so there is no way to track it.</mark></p>
+<p id="50f4" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">To properly assign the 2nd position in the</mark><mark class="qi qj qk">&nbsp;</mark><mark class="qi qj qk">list&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a</strong></code></mark><mark class="qi qj qk">&nbsp;to 50, you would simply do&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">a[2] = 50</strong></code></mark><mark class="qi qj qk">&nbsp;instead of chained indexing</mark><mark class="qi qj qk">.</mark></p>
+<h1 id="25f3" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Shallow vs Deep Copy (Advanced)</h1>
+<p id="6ca2" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">You can safely skip this section as it won&rsquo;t be relevant to our subset selection.&nbsp;<mark class="qi qj qk">Python creates a&nbsp;</mark><mark class="qi qj qk"><strong class="lh mx">shallow copy</strong></mark><mark class="qi qj qk">&nbsp;when performing a slice on a list.</mark><mark class="qi qj qk">&nbsp;If you have mutable objects within your list, then these inner list objects won&rsquo;t be copied and will still be referring to the same object.</mark></p>
+<p id="a8ab" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s create a list with a another list inside of it.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="e376" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a = [7, [1, 2], 5, 6, 10, 14, 19, 20]<br />&gt;&gt;&gt; a<br />[7, [1, 2], 5, 6, 10, 14, 19, 20]</span></pre>
+<p id="e025" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s take a slice of this list:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="01c1" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a_slice = a[1:4]<br />&gt;&gt;&gt; a_slice<br />[[1, 2], 5, 6]</span></pre>
+<p id="5d85" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s look at the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">id</strong></code>&nbsp;of the inner list from both&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">a</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">a_slice</strong></code></p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="727c" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; id(a[1]) == id(a_slice[0])<br />True</span></pre>
+<p id="d8de" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">They are the exact same! Python has created a&nbsp;<strong class="lh mx">shallow copy</strong>&nbsp;here, meaning every mutable object inside of the slice is still the same as it was in the original.</p>
+<h1 id="bd2c" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Making an assignment to the inner list</h1>
+<p id="236a" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s change the first value in the inner list of&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">a_slice</strong></code>&nbsp;and see if it changes the inner list of&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">a</strong></code>:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="c46a" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; inner_list = a_slice[0]<br />&gt;&gt;&gt; inner_list<br />[1, 2]</span><span id="35e2" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; inner_list[0] = 99<br />&gt;&gt;&gt; a_slice<br />[[99, 2], 5, 6]</span><span id="6449" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a<br />[7, [99, 2], 5, 6, 10, 14, 19, 20]</span></pre>
+<p id="5cbb" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">The inner list for both variables had its first element changed. T<mark class="qi qj qk">hat inner list never copied when taking that first slice and therefore it exists in only one unique place in memory.</mark></p>
+<h1 id="531f" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Chained indexing assignment in one step</h1>
+<p id="6f1c" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">We can modify this inner list in a single chain of indexing in one line of code.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="aa5f" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; # output our current list<br />&gt;&gt;&gt; a<br />[7, [99, 2], 5, 6, 10, 14, 19, 20]</span><span id="8c25" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a[1:5][0][0] = 1000<br />&gt;&gt;&gt; a<br />[7, [1000, 2], 5, 6, 10, 14, 19, 20]</span></pre>
+<h1 id="d9e9" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Using the copy module to create a deep copy</h1>
+<p id="a277" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">The standard library comes with the&nbsp;<a class="bu bq lt lu lv lw" href="https://docs.python.org/3/library/copy.html" target="_blank" rel="noopeneer noopener noreferrer">copy module</a>&nbsp;to make a&nbsp;<strong class="lh mx">deep copy</strong>&nbsp;of your object. A deep copy creates a copy of every single mutable object within your object.</p>
+<p id="cc35" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s re-run the code from a couple sections above where we take a slice of a list containing an inner list and this time make a deep copy before checking the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">id</strong></code>&nbsp;of each inner list.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="4c3c" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; import copy</span><span id="d29f" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a = [7, [1, 2], 5, 6, 10, 14, 19, 20]<br />&gt;&gt;&gt; a_slice = copy.deepcopy(a[1:4])</span><span id="cb9f" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; id(a[1]) == id(a_slice[0])<br />False</span></pre>
+<h1 id="18bf" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Chained Indexing in pandas</h1>
+<p id="8c10" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Chained indexing happens analogously to pandas DataFrames/Series. Whenever you do two (or more) subset selections one after the other, you are doing chained indexing. Note, that this isn&rsquo;t 100% indicative that you are doing something wrong but for the vast majority of cases that I have seen, it is.</p>
+<p id="afb6" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s walk through several examples of chained indexing on a pandas DataFrame. To simplify matters, we will use some fake data on a small DataFrame.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="ac3f" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; import pandas as pd<br />&gt;&gt;&gt; df = pd.read_csv('../../data/sample_data.csv', index_col=0)<br />&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y nr">
+<div class="ka l dw kb">
+<div class="ns l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*IMA7inD9ePMIGeY95QMmgg.png?q=20" alt="" width="402" height="259" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/804/1*IMA7inD9ePMIGeY95QMmgg.png" alt="" width="402" height="259" /></div>
+</div>
+</div>
+</figure>
+<h2 id="b1ea" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 1</h2>
+<p id="752e" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s select the columns&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">food</strong></code>,&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">age</strong></code>, and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">color</strong></code>&nbsp;and then immediately select just&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">age</strong></code>&nbsp;using chained indexing:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="1e43" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df[['food', 'age', 'color']]['age']<br />Jane         30<br />Niko          2<br />Aaron        12<br />Penelope      4<br />Dean         32<br />Christina    33<br />Cornelia     69<br />Name: age, dtype: int64</span></pre>
+<p id="1e78" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">It might be easier to store each selection to a variable first:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="bc4a" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a = ['food', 'age', 'color']<br />&gt;&gt;&gt; b = 'age'<br />&gt;&gt;&gt; df[a][b]<br />Jane         30<br />Niko          2<br />Aaron        12<br />Penelope      4<br />Dean         32<br />Christina    33<br />Cornelia     69<br />Name: age, dtype: int64</span></pre>
+<h2 id="b493" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 2</h2>
+<p id="d10e" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s use&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>&nbsp;to select&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Niko</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Dean</strong></code>&nbsp;along with&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">state</strong></code>,&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">height</strong></code>, and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">color</strong></code>. Then, let's chain&nbsp;<em class="oe">just the indexing operator</em>&nbsp;to select&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">height</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">color</strong></code>.</p>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="jt ju dw jv ab">
+<div class="x y of">
+<div class="ka l dw kb">
+<div class="og l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*EtnwIVtFeKf-KY49DZthWg.png?q=20" alt="" width="1292" height="86" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/2584/1*EtnwIVtFeKf-KY49DZthWg.png" alt="" width="1292" height="86" /></div>
+</div>
+</div>
+</div>
+<figcaption class="as eb kh ki hl dr x y kj kk an dj" data-selectable-paragraph="">Some code snippets such as this one will be an image in order to fit more characters into a single line</figcaption>
+</figure>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y oh">
+<div class="ka l dw kb">
+<div class="oi l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*Rmtj0YwDdRBSgRUViV_SWg.png?q=20" alt="" width="169" height="102" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/338/1*Rmtj0YwDdRBSgRUViV_SWg.png" alt="" width="169" height="102" /></div>
+</div>
+</div>
+</figure>
+<p id="dfc2" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">That&rsquo;s a lot of brackets in the above expression. Let&rsquo;s separate each selection into their own variables. Below, the variable&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">a</strong></code>&nbsp;is technically a two-item tuple of lists.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="b214" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; a = ['Niko', 'Dean'], ['state', 'height', 'color']<br />&gt;&gt;&gt; b = ['height', 'color']</span><span id="f573" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc[a][b] # outputs same as previous</span></pre>
+<h2 id="c318" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 3</h2>
+<p id="d4e2" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s use&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.iloc</strong></code>&nbsp;first to select the rows 2 through 5 and then chain it again to select the last three columns.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="020b" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.iloc[2:5].iloc[:, -3:]</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y oj">
+<div class="ka l dw kb">
+<div class="ok l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*4qeD8pT0JXfF5Xcxdd0HDg.png?q=20" alt="" width="235" height="136" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/470/1*4qeD8pT0JXfF5Xcxdd0HDg.png" alt="" width="235" height="136" /></div>
+</div>
+</div>
+</figure>
+<h2 id="9601" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 4</h2>
+<p id="d341" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s select the rows&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Aaron</strong></code>,&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Dean</strong></code>, and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Christina</strong></code>&nbsp;with&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>&nbsp;and then the columns&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">age</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">food</strong></code>&nbsp;with just the indexing operator.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="17c5" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc[['Aaron', 'Dean', 'Christina']][['age', 'food']]</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y ol">
+<div class="ka l dw kb">
+<div class="om l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*8Awkq7DlG2AWosEmPW63mQ.png?q=20" alt="" width="191" height="134" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/382/1*8Awkq7DlG2AWosEmPW63mQ.png" alt="" width="191" height="134" /></div>
+</div>
+</div>
+</figure>
+<h2 id="b243" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 5</h2>
+<p id="4729" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Select all the rows with age greater than 10 with&nbsp;<em class="oe">just the indexing operator</em>&nbsp;and then select the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">score</strong></code>&nbsp;column.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="6577" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df[df['age'] &gt; 10]['score']<br />Jane         4.6<br />Aaron        9.0<br />Dean         1.8<br />Christina    9.5<br />Cornelia     2.2<br />Name: score, dtype: float64</span></pre>
+<h1 id="00db" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Identifying Chained Indexing</h1>
+<p id="0b5d" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">First, all the examples from above are things you should strive to avoid. All the selections from above could have been reproduced in a much simpler and more direct manner.</mark></p>
+<p id="5902" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">As mentioned previously,&nbsp;<mark class="qi qj qk">chained indexing occurs whenever you use the indexers&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">[]</strong></code></mark><mark class="qi qj qk">,&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code></mark><mark class="qi qj qk">, or&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">.iloc</strong></code></mark><mark class="qi qj qk">&nbsp;twice in a row.</mark></p>
+<p id="3da1" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">If you are having trouble identifying chained indexing you can look for the following:</p>
+<ul class="">
+<li id="5bc6" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls mp mq mr" data-selectable-paragraph="">A closed bracket followed by an open bracket &mdash; Look for&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">][</strong></code>&nbsp;as with&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df[a][b]</strong></code></li>
+<li id="3c09" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph=""><code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>&nbsp;or&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.iloc</strong></code>&nbsp;following a closed bracket like in example 3:&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df.iloc[2:5].iloc[:, -3:]</strong></code></li>
+</ul>
+<p id="4a10" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Another way to determine if you have chained indexing is if you can break the operation up into two lines. For instance,&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df[a][b]</strong></code>&nbsp;can be broken up into:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="322f" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1 = df[a]<br />&gt;&gt;&gt; df1[b]</span></pre>
+<p id="93ae" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Thanks to Tom Augspurger for the first bullet. See his&nbsp;<a class="bu bq lt lu lv lw" href="https://tomaugspurger.github.io/modern-1-intro.html" target="_blank" rel="noopeneer noopener noreferrer">blog post on indexing</a>&nbsp;for more.</p>
+<h1 id="765b" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Making the examples idiomatic</h1>
+<p id="0242" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s re-write all of the above examples idiomatically.</p>
+<h2 id="d2ab" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 1 &mdash; Idiomatic</h2>
+<pre class="nd ne nf ng nh dz gi cy"><span id="fdf8" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; # df[['food', 'age', 'color']]['age'] - bad<br />&gt;&gt;&gt; df['age']<br />Jane         30<br />Niko          2<br />Aaron        12<br />Penelope      4<br />Dean         32<br />Christina    33<br />Cornelia     69<br />Name: age, dtype: int64</span></pre>
+<h2 id="2f03" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 2 &mdash; Idiomatic</h2>
+<pre class="nd ne nf ng nh dz gi cy"><span id="77ab" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; # df.loc[['Niko', 'Dean'], ['state', 'height', 'color']][['height', 'color']] - bad</span><span id="3d6b" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc[['Niko', 'Dean'], ['height', 'color']]</span></pre>
+<h2 id="8b15" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 3 &mdash; Idiomatic</h2>
+<pre class="nd ne nf ng nh dz gi cy"><span id="0500" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; # df.iloc[2:5].iloc[:, -3:] - bad<br />&gt;&gt;&gt; df.iloc[2:5, -3:]</span></pre>
+<h2 id="9ef4" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 4 &mdash; Idiomatic</h2>
+<pre class="nd ne nf ng nh dz gi cy"><span id="31a2" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; # df.loc[['Aaron', 'Dean', 'Christina']][['age', 'food']] - bad<br />&gt;&gt;&gt; df.loc[['Aaron', 'Dean', 'Christina'], ['age', 'food']]</span></pre>
+<h2 id="95e3" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Chained Indexing Example 5 &mdash; Idiomatic</h2>
+<pre class="nd ne nf ng nh dz gi cy"><span id="bd20" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; # df[df['age'] &gt; 10]['score'] - bad<br />&gt;&gt;&gt; df.loc[df['age'] &gt; 10, 'score']<br />Jane         4.6<br />Aaron        9.0<br />Dean         1.8<br />Christina    9.5<br />Cornelia     2.2<br />Name: score, dtype: float64</span></pre>
+<h1 id="c201" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Why is chained indexing bad?</h1>
+<p id="7fc5" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">There are two primary reasons that chained indexing should be avoided if possible.</p>
+<h2 id="8da9" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Two separate operations</h2>
+<p id="7031" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">The first, and less important reason, is that two separate pandas operations will be called instead of just one.</mark></p>
+<p id="7fe9" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s take example 4 from above:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="b47b" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc[['Aaron', 'Dean', 'Christina']][['age', 'food']]</span></pre>
+<p id="39b1" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">When this code is executed, two independent operations are completed. The following is run first:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="24ba" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc[['Aaron', 'Dean', 'Christina']]</span></pre>
+<p id="b859" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">The result of this is a DataFrame, and on this temporary and intermediate DataFrame the second and final operation is run to select two columns:</mark>&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">[['age', 'food']]</strong></code>.</p>
+<p id="89f2" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s see this operation written idimoatically:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="1373" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc[['Aaron', 'Dean', 'Christina'], ['age', 'food']]</span></pre>
+<p id="6780" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">There is exactly one operation, a call to the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>&nbsp;indexer that is passed both the row and column selections simultaneously.</p>
+<h2 id="1062" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph=""><code class="kb mz na nb nc b">SettingWithCopy</code>&nbsp;warning&nbsp;<mark class="qi qj qk">on</mark>&nbsp;assignment</h2>
+<p id="e825" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">The major problem with chained indexing is when assigning new values to the subset, in which Pandas will usually emit the&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code></mark><mark class="qi qj qk">&nbsp;warning.</mark></p>
+<p id="1c19" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s use example 5 from above with its chained indexing version to change all the&nbsp;<mark class="qi qj qk">scores</mark>&nbsp;of those older than 10 to 99.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="0a56" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; <mark class="qi qj qk">df[df['age'] &gt; 10]['score'] = 99</mark></span><span id="b44b" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">/Users/Ted/anaconda3/lib/python3.6/site-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: <br />A value is trying to be set on a copy of a slice from a DataFrame.<br />Try using .loc[row_indexer,col_indexer] = value instead</span><span id="bf73" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy<br />  """Entry point for launching an IPython kernel.</span></pre>
+<p id="49b3" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">The&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning was triggered. Let's output the DataFrame to see if the assignment happened correctly.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="6c96" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y on">
+<div class="ka l dw kb">
+<div class="oo l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*jKPVw7YyZVaM1yF8gkcaJw.png?q=20" alt="" width="409" height="266" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/818/1*jKPVw7YyZVaM1yF8gkcaJw.png" alt="" width="409" height="266" /></div>
+</div>
+</div>
+</figure>
+<p id="41e1" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">If you are enjoying this article, consider purchasing the&nbsp;<a class="bu bq lt lu lv lw" href="http://b.link/ddallaccessm" target="_blank" rel="noopeneer noopener noreferrer">All Access Pass!</a>&nbsp;which includes all my current and future material for one low price.</p>
+<h1 id="b8c5" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Failed Assignment!</h1>
+<p id="a97d" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Our DataFrame failed to make the assignment. Let&rsquo;s break this operation up into two steps to give us more insight into what is happening.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="0a66" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df_temp = df[df['age'] &gt; 10]<br />&gt;&gt;&gt; df_temp['score'] = 99</span><span id="644e" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">/Users/Ted/anaconda3/lib/python3.6/site-packages/ipykernel_launcher.py:2: SettingWithCopyWarning: <br />A value is trying to be set on a copy of a slice from a DataFrame.<br />Try using .loc[row_indexer,col_indexer] = value instead</span><span id="4785" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">See the caveats in the documentation: <a class="bu bq lt lu lv lw" href="https://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy" target="_blank" rel="noopeneer noopener noreferrer">http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy</a></span></pre>
+<p id="35d2" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">The warning is triggered yet again even though there are two lines of code.&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">df_temp</strong></code></mark><mark class="qi qj qk">&nbsp;is a subset of a DataFrame and a</mark><mark class="qi qj qk">ny subsets that continue with another subset assignment are liable to trigger the warning.</mark><mark class="qi qj qk">&nbsp;It doesn&rsquo;t matter if it happens on the same line or not.</mark></p>
+<p id="5c25" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s take a look at&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df_temp</strong></code>:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="ffc6" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df_temp</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y op">
+<div class="ka l dw kb">
+<div class="oq l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*7RNNIcFUfXr3icUXZr3m4g.png?q=20" alt="" width="413" height="202" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/826/1*7RNNIcFUfXr3icUXZr3m4g.png" alt="" width="413" height="202" /></div>
+</div>
+</div>
+</figure>
+<p id="023f" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">The assignment completed correctly for the intermediate DataFrame but not for our original. The reason for this, is the same reason as to why the chained indexing did not work for the list at the top of this tutorial.</p>
+<p id="2b82" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">When we run&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">df[df['age'] &gt; 10]</strong></code></mark><mark class="qi qj qk">, pandas creates an entire new&nbsp;</mark><mark class="qi qj qk"><strong class="lh mx">copy</strong></mark><mark class="qi qj qk">&nbsp;of the data.</mark><mark class="qi qj qk">&nbsp;</mark>So when we try and assign the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">score</strong></code>&nbsp;column, we are modifying this new copy and not the original. Thus,&nbsp;<mark class="qi qj qk">the name&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code></mark><mark class="qi qj qk">&nbsp;make sense: pandas is warning you that you are setting (making an assignment) on a copy of a DataFrame.</mark></p>
+<h1 id="569d" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">How to assign correctly?</h1>
+<p id="d061" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">You should never use chained indexing to make an assignment. Instead, make exactly a single call to one of the indexers.</mark>&nbsp;In this case, we can use&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>&nbsp;to properly make the selection and assignment.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="0127" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; <mark class="qi qj qk">df.loc[df['age'] &gt; 10, 'score'] = 99</mark><br />&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y nr">
+<div class="ka l dw kb">
+<div class="or l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*u__tjOrzJNchkm2jFbtc4A.png?q=20" alt="" width="402" height="262" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/804/1*u__tjOrzJNchkm2jFbtc4A.png" alt="" width="402" height="262" /></div>
+</div>
+</div>
+</figure>
+<h1 id="472e" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">SettingWithCopy example that does assignment</h1>
+<p id="7477" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s do another nearly identical chained indexing as the previous example, except we will reverse the order of the chain. We will first select the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">score</strong></code>&nbsp;column and use boolean indexing to choose the people older than 10 and assign them a score of 0.</p>
+<p id="6bdb" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">First we will, just make the selection (without assignment) so you can see what we are trying to assign.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="00fb" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df['score'][df['age'] &gt; 10]<br />Jane         99.0<br />Aaron        99.0<br />Dean         99.0<br />Christina    99.0<br />Cornelia     99.0<br />Name: score, dtype: float64</span></pre>
+<p id="90c0" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Now, let&rsquo;s make the assignment:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="df3e" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df['score'][df['age'] &gt; 10] = 0</span><span id="e6f4" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">/Users/Ted/anaconda3/lib/python3.6/site-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: <br />A value is trying to be set on a copy of a slice from a DataFrame</span><span id="e81f" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy<br />  """Entry point for launching an IPython kernel.</span></pre>
+<p id="d588" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">The warning is triggered again. Let&rsquo;s output the DataFrame:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="38d4" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y os">
+<div class="ka l dw kb">
+<div class="ot l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*w_xyjrbkC-FXAMDCvL-shw.png?q=20" alt="" width="406" height="262" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/812/1*w_xyjrbkC-FXAMDCvL-shw.png" alt="" width="406" height="262" /></div>
+</div>
+</div>
+</figure>
+<h1 id="0ba2" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">What happened this time?</h1>
+<p id="f2bf" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">The first part of the above operation selects the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">score</strong></code>&nbsp;column.&nbsp;<mark class="qi qj qk">When pandas selects a single column from a DataFrame,&nbsp;</mark><mark class="qi qj qk">pandas creates a&nbsp;</mark><mark class="qi qj qk"><strong class="lh mx">view</strong></mark><mark class="qi qj qk">&nbsp;and not a</mark><mark class="qi qj qk">&nbsp;</mark><mark class="qi qj qk"><strong class="lh mx">copy</strong></mark><mark class="qi qj qk">.</mark><mark class="qi qj qk">&nbsp;A view just means that no new object has been created.</mark>&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df['score']</strong></code>references the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">score</strong></code>&nbsp;column in the original DataFrame.</p>
+<p id="93cd" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">This is analogous to the list example where we assigned an entire list to a new variable. No new object is created, just a new reference to the one already in existence.</p>
+<p id="5c89" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Since no new data has been created, the assignment will modify the original DataFrame.</p>
+<h1 id="5e04" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Why is a warning triggered when our operation completed successfully?</h1>
+<p id="ce22" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Pandas does not know if you want to modify the original DataFrame or just the first subset selection.</p>
+<p id="896c" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">For instance, you could have selected the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">score</strong></code>&nbsp;column as a&nbsp;<mark class="qi qj qk">Series</mark>&nbsp;to do further analysis with it without affecting the original DataFrame.</p>
+<p id="383f" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s get a fresh read of our data and see this example:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="bae1" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df = pd.read_csv('../../data/sample_data.csv', index_col=0)</span><span id="9aa8" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; s = df['score']<br />&gt;&gt;&gt; s <br />Jane         4.6<br />Niko         8.3<br />Aaron        9.0<br />Penelope     3.3<br />Dean         1.8<br />Christina    9.5<br />Cornelia     2.2<br />Name: score, dtype: float64</span></pre>
+<p id="72eb" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s set all the values of scores that are greater than 5 to 0.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="4f05" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; s[s &gt; 5] = 0</span><span id="d783" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">/Users/Ted/anaconda3/lib/python3.6/site-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: <br />A value is trying to be set on a copy of a slice from a DataFrame</span><span id="395a" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy<br />  """Entry point for launching an IPython kernel.</span></pre>
+<h2 id="6e9c" class="ni ly ay ao an en nt nu nv nw nx ny nz oa ob oc od" data-selectable-paragraph="">Why was the warning triggered here?</h2>
+<p id="d185" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">This last assignment does not use chained indexing. But, the variable&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">s</strong></code>&nbsp;was created from a subset selection of a DataFrame. So it's really not any different than doing the following:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="1608" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df['score'][df['score'] &gt; 5] = 0</span></pre>
+<p id="526f" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Pandas can&rsquo;t tell the difference between an assignment like this in a single line versus one on multiple lines. Pandas doesn&rsquo;t know if you want the original DataFrame modified or not. Let&rsquo;s take a look at both&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">s</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df</strong></code>&nbsp;to see what has happened.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="677d" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; s<br />Jane         4.6<br />Niko         0.0<br />Aaron        0.0<br />Penelope     3.3<br />Dean         1.8<br />Christina    0.0<br />Cornelia     2.2<br />Name: score, dtype: float64</span></pre>
+<p id="f182" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><code class="kb mz na nb nc b"><strong class="lh mx">s</strong></code>&nbsp;was modified as expected. But, what about our original?</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="1a14" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y on">
+<div class="ka l dw kb">
+<div class="oo l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*J7blR2FdLTLog8U-PCIAJA.png?q=20" alt="" width="409" height="266" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/818/1*J7blR2FdLTLog8U-PCIAJA.png" alt="" width="409" height="266" /></div>
+</div>
+</div>
+</figure>
+<p id="de2f" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">Our original DataFrame has been modified, which means that&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">s</strong></code></mark><mark class="qi qj qk">&nbsp;is a view and</mark><mark class="qi qj qk">&nbsp;not a copy.</mark></p>
+<h1 id="058a" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Why is the warning message so useless?</h1>
+<p id="9069" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Let&rsquo;s take a look at what the warning says:</p>
+<blockquote class="ou ov ow">
+<p id="c883" class="lf lg ay oe lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><strong class="lh mx"><em class="ao">A value is trying to be set on a copy of a slice from a DataFrame</em></strong></p>
+</blockquote>
+<p id="6f9c" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">I&rsquo;m not sure what&nbsp;<strong class="lh mx">copy of a slice</strong>&nbsp;actually means, but it isn&rsquo;t what we had in the previous example.&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">s</strong></code>&nbsp;was a view of a column of a DataFrame and not a copy.</p>
+<h1 id="d544" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">What the warning should really say</h1>
+<p id="8f07" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">A better message would look something like this:</p>
+<blockquote class="ou ov ow">
+<p id="0efb" class="lf lg ay oe lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><strong class="lh mx"><em class="ao">You are attempting to make an assignment on an object that is either a view or a copy of a DataFrame. This occurs whenever you make a subset selection from a DataFrame and then try to assign new values to this subset.</em></strong></p>
+</blockquote>
+<h1 id="65b6" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Summary of when the SettingWithCopy warning is triggered</h1>
+<p id="32bb" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">In summary, whenever you make a subset selection and then modify the values in that subset selection, you will likely trigger the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning.</p>
+<p id="9bf5" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">It might help to see one more example of when the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;is triggered.</p>
+<p id="d9f4" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s begin by selecting two columns from&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df</strong></code>&nbsp;into a new variable:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="c7ac" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1 = df[['color', 'age']]<br />&gt;&gt;&gt; df1</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y ox">
+<div class="ka l dw kb">
+<div class="oy l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/42/1*u2Yrs2vVMreNpB_j3J8mtw.png?q=20" alt="" width="180" height="260" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/360/1*u2Yrs2vVMreNpB_j3J8mtw.png" alt="" width="180" height="260" /></div>
+</div>
+</div>
+</figure>
+<p id="cb2d" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s display the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">age</strong></code>&nbsp;column from this new DataFrame:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="00c1" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1['age'] # no warning for output, there is no assignment here<br />Jane         30<br />Niko          2<br />Aaron        12<br />Penelope      4<br />Dean         32<br />Christina    33<br />Cornelia     69<br />Name: age, dtype: int64</span></pre>
+<p id="3638" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s add a new column&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">weight</strong></code>:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="13be" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1['weight'] = [150, 30, 120, 40, 200, 130, 144]</span><span id="0247" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">/Users/Ted/anaconda3/lib/python3.6/site-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: <br />A value is trying to be set on a copy of a slice from a DataFrame.<br />Try using .loc[row_indexer,col_indexer] = value instead</span><span id="68ef" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy<br />  """Entry point for launching an IPython kernel.</span></pre>
+<p id="699e" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">We triggered the warning because&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df1</strong></code>&nbsp;is a subset selection from&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df</strong></code>&nbsp;and we subsequently modified it by adding a new column.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="714c" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y oj">
+<div class="ka l dw kb">
+<div class="oz l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/52/1*KfD0BoVFa46BBiSsFdF9fg.png?q=20" alt="" width="235" height="270" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/470/1*KfD0BoVFa46BBiSsFdF9fg.png" alt="" width="235" height="270" /></div>
+</div>
+</div>
+</figure>
+<p id="775a" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">The original is left unchanged.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="68fb" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y pa">
+<div class="ka l dw kb">
+<div class="pb l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*W1IIMe__hSYnBcucHTzsbw.png?q=20" alt="" width="412" height="271" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/824/1*W1IIMe__hSYnBcucHTzsbw.png" alt="" width="412" height="271" /></div>
+</div>
+</div>
+</figure>
+<p id="03c2" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s continue and change all the ages to 99, which will again trigger the warning.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="f3c6" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1['age'] = 99</span><span id="18cc" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">/Users/Ted/anaconda3/lib/python3.6/site-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: <br />A value is trying to be set on a copy of a slice from a DataFrame.<br />Try using .loc[row_indexer,col_indexer] = value instead</span><span id="7da6" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy<br />  """Entry point for launching an IPython kernel.</span><span id="d6f3" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y pc">
+<div class="ka l dw kb">
+<div class="pd l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/54/1*Xv1SqIuS0DgcXwqn4x7GzA.png?q=20" alt="" width="246" height="270" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/492/1*Xv1SqIuS0DgcXwqn4x7GzA.png" alt="" width="246" height="270" /></div>
+</div>
+</div>
+</figure>
+<p id="319e" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">The original was also left unchanged:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="b2b1" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y pe">
+<div class="ka l dw kb">
+<div class="pf l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*xI7WsYXqSh3ZNR1T9xKy8w.png?q=20" alt="" width="404" height="263" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/808/1*xI7WsYXqSh3ZNR1T9xKy8w.png" alt="" width="404" height="263" /></div>
+</div>
+</div>
+</figure>
+<h1 id="339a" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">How does pandas know to even to trigger the warning?</h1>
+<p id="a59b" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">In the above example, we created&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df1</strong></code>, which when modifying the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">age</strong></code>&nbsp;column, triggered the warning. How did pandas know to do this?</p>
+<p id="89a7" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">df1</strong></code></mark><mark class="qi qj qk">&nbsp;was created by&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">df[['color', 'age']]</strong></code></mark><mark class="qi qj qk">. During this selection, pandas alters the&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">is_copy</strong></code></mark><mark class="qi qj qk">&nbsp;or&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">_is_view</strong></code></mark><mark class="qi qj qk">&nbsp;attributes.</mark></p>
+<p id="5da0" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">If we call&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">is_copy</strong></code>&nbsp;like a method then we will get the object it was copied from if it is a copy or&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">None</strong></code>&nbsp;will be returned. Let's see its value for&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df1</strong></code>:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="999d" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1.is_copy()</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y nr">
+<div class="ka l dw kb">
+<div class="pg l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*rDwqWTC33sTWkEfWebSo_Q.png?q=20" alt="" width="402" height="256" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/804/1*rDwqWTC33sTWkEfWebSo_Q.png" alt="" width="402" height="256" /></div>
+</div>
+</div>
+</figure>
+<p id="6164" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">The private attribute&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">_is_view</strong></code>&nbsp;is a boolean:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="471f" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1._is_view<br />False</span></pre>
+<p id="5129" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s check these same attributes for&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df</strong></code>. Since&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df</strong></code>&nbsp;was read in directly from a csv it should not be a copy or a view. If it indeed is a copy, then it will return&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">None</strong></code>.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="3737" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.is_copy is None<br />True</span><span id="3cbd" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df._is_view<br />False</span></pre>
+<p id="572b" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s find out if a single column as a Series is a view or a copy.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="82f4" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; food = df['food']<br />&gt;&gt;&gt; food.is_copy is None    # not a copy<br />True</span><span id="2306" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; food._is_view<br />True</span></pre>
+<p id="fdd1" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Selecting a single column returns a view and not a copy</p>
+<h1 id="e9cd" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">False Negatives with SettingWithCopy with .loc and .iloc</h1>
+<p id="714e" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Unfortunately, when using chained indexing where&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.iloc</strong></code>&nbsp;are used as the first indexer, the warning will not get triggered reliably. Let's take a look at an example where no warning is triggered and no change is made to the data.</p>
+<p id="f0a1" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s change the ages of&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Niko</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Dean</strong></code>&nbsp;to 99.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="d999" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df = pd.read_csv('../../data/sample_data.csv', index_col=0)<br />&gt;&gt;&gt; df.loc[['Niko','Dean']]['age'] = 99<br />&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y ph">
+<div class="ka l dw kb">
+<div class="pi l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*wp_VMDoF2JJq4lK8yzUsqQ.png?q=20" alt="" width="401" height="262" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/802/1*wp_VMDoF2JJq4lK8yzUsqQ.png" alt="" width="401" height="262" /></div>
+</div>
+</div>
+</figure>
+<p id="2137" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s make a&nbsp;<mark class="qi qj qk">slight</mark>&nbsp;change and use slice notation to select all the names from&nbsp;<strong class="lh mx">Niko</strong>&nbsp;through&nbsp;<strong class="lh mx">Dean</strong>&nbsp;instead.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="6ae7" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc['Niko':'Dean']['age'] = 99<br />&gt;&gt;&gt; df</span><span id="fe83" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">/Users/Ted/anaconda3/lib/python3.6/site-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: <br />A value is trying to be set on a copy of a slice from a DataFrame.<br />Try using .loc[row_indexer,col_indexer] = value instead</span><span id="961e" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy<br />  """Entry point for launching an IPython kernel.</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y nr">
+<div class="ka l dw kb">
+<div class="pj l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*sizDOHIKGu2SjBoF3kOtvA.png?q=20" alt="" width="402" height="268" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/804/1*sizDOHIKGu2SjBoF3kOtvA.png" alt="" width="402" height="268" /></div>
+</div>
+</div>
+</figure>
+<h1 id="31f2" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">WTF????</h1>
+<p id="ad2e" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">By changing from a list to a slice within&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>, the warning is triggered AND the DataFrame is modified. This is craziness.</p>
+<h1 id="59bb" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Some good news</h1>
+<p id="094f" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">None of the stuff that we have done for&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;needs to be memorized. Even I don't know whether a subset selection will return a view or a copy. You don't have to worry about any of that it.</p>
+<h1 id="cf04" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph=""><mark class="qi qj qk">Two common scenarios</mark></h1>
+<p id="715d" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">You will almost always find yourself in one of two scenarios:</p>
+<ol class="">
+<li id="54f3" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls my mq mr" data-selectable-paragraph="">Y<mark class="qi qj qk">ou want to work with the entire DataFrame and modify a subset of it</mark></li>
+<li id="251d" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls my mq mr" data-selectable-paragraph=""><mark class="qi qj qk">You want to work with a subset of your original DataFrame and modify that subset</mark></li>
+</ol>
+<p id="5483" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">Scenario 1 is solved by&nbsp;</mark><mark class="qi qj qk">using exactly one indexer to make the selection and&nbsp;</mark><mark class="qi qj qk">assignment</mark><mark class="qi qj qk">.</mark></p>
+<p id="bb25" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">Scenario 2 is solved by&nbsp;</mark><mark class="qi qj qk">forcing a copy of your subset selection with the&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">copy</strong></code></mark><mark class="qi qj qk">&nbsp;method.</mark><mark class="qi qj qk">&nbsp;This will allow you to make changes to this new DataFrame without modifying the original.</mark></p>
+<h1 id="d342" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Scenario 1 &mdash; Working with the entire DataFrame</h1>
+<p id="a11d" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">When you are doing an analysis on a single DataFrame and want to work only on this DataFrame in its entirety then you are in scenario 1.</p>
+<p id="ce5c" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">For instance, if we want to change the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">color</strong></code>&nbsp;of all the people who live in Texas to maroon, we would do this in a single call to the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>&nbsp;indexer.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="e0f5" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df = pd.read_csv('../../data/sample_data.csv', index_col=0)</span><span id="0014" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc[df['state'] == 'TX', 'color'] = 'maroon'<br />&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y pk">
+<div class="ka l dw kb">
+<div class="pl l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*mRFo3eqt1dg1C1bLYWJdBg.png?q=20" alt="" width="415" height="262" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/830/1*mRFo3eqt1dg1C1bLYWJdBg.png" alt="" width="415" height="262" /></div>
+</div>
+</div>
+</figure>
+<p id="fa25" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">We add 5 to the score of&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Jane</strong></code>,&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Dean</strong></code>, and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Cornelia</strong></code>&nbsp;like this:</p>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="jt ju dw jv ab">
+<div class="x y pm">
+<div class="ka l dw kb">
+<div class="pn l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*MOgteDgtCFCLVR8SE36ZWA.png?q=20" alt="" width="1686" height="120" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/3372/1*MOgteDgtCFCLVR8SE36ZWA.png" alt="" width="1686" height="120" /></div>
+</div>
+</div>
+</div>
+</figure>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y po">
+<div class="ka l dw kb">
+<div class="pp l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*ZzuJk5xPoV6QOaszw-_4QA.png?q=20" alt="" width="420" height="265" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/840/1*ZzuJk5xPoV6QOaszw-_4QA.png" alt="" width="420" height="265" /></div>
+</div>
+</div>
+</figure>
+<p id="cf48" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">We can change a single cell, such as the age of&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Aaron</strong></code>&nbsp;to 15:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="a6c6" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc['Aaron', 'age'] = 15<br />&gt;&gt;&gt; df</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y pq">
+<div class="ka l dw kb">
+<div class="pr l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*vNovlASBy2tClgixT6goZQ.png?q=20" alt="" width="418" height="259" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/836/1*vNovlASBy2tClgixT6goZQ.png" alt="" width="418" height="259" /></div>
+</div>
+</div>
+</figure>
+<p id="a561" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">All of these examples involve simultaneous selection of rows and columns, which are the most tempting to do chained indexing on.</p>
+<h1 id="db2d" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Scenario 2</h1>
+<p id="a06b" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">In scenario 2, we would like to&nbsp;<mark class="qi qj qk">select some data from our original DataFrame and do an independent analysis on it separate from the original.&nbsp;</mark>For instance, let&rsquo;s say we wanted to select just the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">food</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">height</strong></code>&nbsp;columns into a separate DataFrame.</p>
+<p id="c625" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s go ahead and make this selection:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="e9f7" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; <mark class="qi qj qk">df1 = df[['food', 'height']]</mark><br />&gt;&gt;&gt; df1</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y ps">
+<div class="ka l dw kb">
+<div class="pt l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/48/1*gh-kw1-5V8cHxY3YkIIsrg.png?q=20" alt="" width="211" height="268" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/422/1*gh-kw1-5V8cHxY3YkIIsrg.png" alt="" width="211" height="268" /></div>
+</div>
+</div>
+</figure>
+<p id="2a1f" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">As we saw from above,&nbsp;</mark><mark class="qi qj qk">this DataFrame is still linked to the original DataFrame.&nbsp;</mark><mark class="qi qj qk">We can&nbsp;</mark><mark class="qi qj qk">check the&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">is_copy</strong></code></mark><mark class="qi qj qk">&nbsp;attribute.</mark></p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="5fe3" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1.is_copy()</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y pu">
+<div class="ka l dw kb">
+<div class="pv l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*ZyI190asUJQChHHXXVSo6w.png?q=20" alt="" width="416" height="260" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/832/1*ZyI190asUJQChHHXXVSo6w.png" alt="" width="416" height="260" /></div>
+</div>
+</div>
+</figure>
+<h1 id="7d68" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph=""><mark class="qi qj qk">Use the copy metho</mark>d</h1>
+<p id="04c6" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">To get an independent copy, call the&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">copy</strong></code></mark><mark class="qi qj qk">&nbsp;method like this:</mark></p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="5cd7" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; <mark class="qi qj qk">df1 = df[['food', 'height']].copy()</mark><br />&gt;&gt;&gt; df1.is_copy is None<br />True</span></pre>
+<p id="233e" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">df1</strong></code></mark><mark class="qi qj qk">&nbsp;is no longer linked to the original in any way. We can now modify one of its columns without getting the&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code></mark><mark class="qi qj qk">&nbsp;warning.</mark></p>
+<p id="d0ef" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s change the height of every person to 100:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="06e5" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df1['height'] = 100<br />&gt;&gt;&gt; df1</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y pw">
+<div class="ka l dw kb">
+<div class="px l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/46/1*1fn_ZEFdVm_1APhrhDJg_w.png?q=20" alt="" width="208" height="266" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/416/1*1fn_ZEFdVm_1APhrhDJg_w.png" alt="" width="208" height="266" /></div>
+</div>
+</div>
+</figure>
+<h1 id="5fa8" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Avoiding ambiguity and complexity</h1>
+<p id="16e4" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">We will now move away from the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning and cover some subset selections that I tend to avoid. These subset selections that I personally find either ambiguous or adding complexity to pandas without adding any additional functionality.</p>
+<p id="ed22" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">However, this does not mean that these subset selections are wrong. They were built into pandas for a purpose and many others make use of them and don&rsquo;t have a problem using them. So, it will be up to you whether or not you decide to use these upcoming subset selections.</p>
+<h1 id="e9c6" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Selecting rows with just the indexing operator</h1>
+<p id="6330" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">The primary purpose of&nbsp;<em class="oe">just the indexing operator</em>&nbsp;is to select column(s) by passing it a string or list of strings. Unexpectedly, this operator completely changes behavior whenever you pass it a slice. For instance, we can select every other row beginning with integer location 1 to the end like this:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="54b4" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df = pd.read_csv('../../data/sample_data.csv', index_col=0)</span><span id="a553" class="ni ly ay ao nc b eb nm nn no np nq nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df[1::2]</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y py">
+<div class="ka l dw kb">
+<div class="pz l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*JbSUHI1AxaH02oDovMvIZg.png?q=20" alt="" width="403" height="130" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/806/1*JbSUHI1AxaH02oDovMvIZg.png" alt="" width="403" height="130" /></div>
+</div>
+</div>
+</figure>
+<p id="49ee" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Even stranger, is that you can make selections by row label as well. For instance, we can select&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Niko</strong></code>&nbsp;through&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Dean</strong></code>&nbsp;like this:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="ebfb" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df['Niko':'Dean']</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y qa">
+<div class="ka l dw kb">
+<div class="qb l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*LgRBtu4_NteM3Cn_OlrAug.png?q=20" alt="" width="407" height="161" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/814/1*LgRBtu4_NteM3Cn_OlrAug.png" alt="" width="407" height="161" /></div>
+</div>
+</div>
+</figure>
+<h1 id="d06d" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Even more bizarre&hellip;.partial string subset selection</h1>
+<p id="5748" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">The most bizarre thing is that you can use partial string matches on the index when using a slice with&nbsp;<em class="oe">just the indexing operator</em>. For this to work, the index will need to be sorted.&nbsp;<mark class="qi qj qk">Call the&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">sort_index</strong></code></mark><mark class="qi qj qk">&nbsp;method&nbsp;</mark>to do so:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="c2fa" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df_sort = df.sort_index()<br />&gt;&gt;&gt; df_sort</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y op">
+<div class="ka l dw kb">
+<div class="qc l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*CkeWfzmYS7fAL9oBT4is0A.png?q=20" alt="" width="413" height="268" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/826/1*CkeWfzmYS7fAL9oBT4is0A.png" alt="" width="413" height="268" /></div>
+</div>
+</div>
+</figure>
+<p id="c191" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><mark class="qi qj qk">Now, you can do use slice notation with partial strings.</mark>&nbsp;For instance, if we wanted to select names that begin with &lsquo;C&rsquo; and &lsquo;D&rsquo;, we would do the following:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="a3f7" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df_sort['C':'E']</span></pre>
+<figure class="nd ne nf ng nh fv x y paragraph-image">
+<div class="x y qa">
+<div class="ka l dw kb">
+<div class="qd l">
+<div class="ed jw dy n o jx ab cp jy jz"><img class="dy n o jx ab kd ke wa wb" src="https://miro.medium.com/max/60/1*Tm5xirNlrMCeGMAloZof5w.png?q=20" alt="" width="407" height="137" /></div>
+<img class="qf qg dy n o jx ab kg" src="https://miro.medium.com/max/814/1*Tm5xirNlrMCeGMAloZof5w.png" alt="" width="407" height="137" /></div>
+</div>
+</div>
+</figure>
+<p id="f2b9" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Technically this slices from the exact label &lsquo;C&rsquo; to the exact label &lsquo;E&rsquo;.</p>
+<h1 id="37fa" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">I never do this</h1>
+<p id="2bd7" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">I never pass&nbsp;<em class="oe">just the indexing operator</em>&nbsp;slices like in these examples for the following reasons:</p>
+<ul class="">
+<li id="7a15" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls mp mq mr" data-selectable-paragraph=""><mark class="qi qj qk">It is confusing for there to be multiple modes of operation</mark><mark class="qi qj qk">&nbsp;</mark><mark class="qi qj qk">for an operator &mdash; one for selecting columns and the other for selecting rows</mark></li>
+<li id="085e" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph=""><mark class="qi qj qk">It is not explicit</mark>&nbsp;&mdash; slicing can happen by both integer location and by label.</li>
+</ul>
+<h1 id="7b37" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph=""><mark class="qi qj qk">If I want to slice rows, I always use .loc/.iloc</mark></h1>
+<p id="f003" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph=""><mark class="qi qj qk">The&nbsp;</mark><mark class="qi qj qk"><code class="kb mz na nb nc b"><strong class="lh mx">.loc/.iloc</strong></code></mark><mark class="qi qj qk">&nbsp;indexers are explicit and there will be no ambiguity with them.</mark>&nbsp;This follows from the Zen of Python that&nbsp;<mark class="qi qj qk">explicit is better than implicit.</mark></p>
+<h1 id="c2c2" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Scalar selection with&nbsp;<code class="kb mz na nb nc b">.at\.iat</code></h1>
+<p id="61c3" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Both&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.at\.iat</strong></code>&nbsp;are indexers that pandas has available to make a selection of one and only one single value. Each of these indexers works analogously to&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc\.iloc</strong></code>.</p>
+<p id="3534" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph=""><code class="kb mz na nb nc b"><strong class="lh mx">.at</strong></code>&nbsp;makes its selection only by&nbsp;<strong class="lh mx">label</strong>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.iat</strong></code>&nbsp;selects only by integer location. They each select a single value. The term&nbsp;<strong class="lh mx">scalar</strong>&nbsp;is used to refer to a single value.</p>
+<p id="0ebe" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Let&rsquo;s take a look at an example of each. First, let&rsquo;s select Dean&rsquo;s age.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="2df8" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.at['Dean', 'age']<br />32</span></pre>
+<p id="f1bc" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Notice that a scalar value was returned and not a pandas Series or DataFrame.</p>
+<p id="5346" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">We can select the cell at the 5th row and 2nd column like this:</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="9a15" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.iat[5, 2]<br />'Melon'</span></pre>
+<h1 id="6bb0" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">What is the purpose of&nbsp;<code class="kb mz na nb nc b">.at\.iat</code>?</h1>
+<p id="d809" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">These indexers offer no additional functionality. You can select a single value with&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>&nbsp;or&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.iloc</strong></code>. But, what they do offer, is a performance improvement, albeit a minor one. So, if there is a performance critical part of your code that does lots of scalar selections you could use&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.at\.iat</strong></code>.</p>
+<p id="59b5" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Personally, I never use them as they add needless complexity to the library for a small performance gain.</p>
+<h1 id="8700" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Summary</h1>
+<ul class="">
+<li id="2062" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls mp mq mr" data-selectable-paragraph="">Idiomatic pandas is efficient, easy to read, and common among experts</li>
+<li id="f16b" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">It is easy to write non-idiomatic pandas &mdash; lots of ways to do the same thing</li>
+<li id="a020" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Getting the right answer does not guarantee that you are using pandas correctly</li>
+<li id="ded7" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Assignment with chained indexing with a list does not work:&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">a[2:6][0] = 5</strong></code>&nbsp;- NEVER DO THIS!</li>
+<li id="92b3" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Assigning an entire list to a new variable does NOT create a new copy. Both variable names will refer to the same underlying object</li>
+<li id="e7bf" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Slicing a list creates a shallow copy</li>
+<li id="9343" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">To make new copies of any mutable objects within a list, you need to do a deep copy</li>
+<li id="9ab9" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Chained indexing happens when you make two successive subset selections one directly after the other</li>
+<li id="51d0" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph=""><mark class="qi qj qk">Avoid chained indexing in pandas</mark></li>
+<li id="4cd4" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Identify chained indexing &mdash; closed then open brackets&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">][</strong></code>&nbsp;or&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc\.iloc</strong></code>&nbsp;following a bracket like this:&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df[a].loc[b]</strong></code></li>
+<li id="ce6c" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Another way to identify chained indexing is if you can break up the indexing into 2 lines of code.</li>
+<li id="a5e3" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Chained indexing is bad because it uses two calls to the indexers instead of one and more importantly triggers the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning when doing an assignment</li>
+<li id="cf52" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">The&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning gets triggered when you make a subset selection and then try to assign new values within this selection. i.e. you have done chained indexing!</li>
+<li id="e296" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Chained indexing is the cause of the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning. Chained indexing can happen in the same line, consecutive lines, or two lines very far apart from each other.</li>
+<li id="e582" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Whenever you make a subset selection, pandas creates either a&nbsp;<strong class="lh mx">view</strong>&nbsp;or a&nbsp;<strong class="lh mx">copy</strong></li>
+<li id="5d03" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">A&nbsp;<strong class="lh mx">view</strong>&nbsp;is a reference to the original DataFrame. No new data has been created.</li>
+<li id="5ce1" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">A&nbsp;<strong class="lh mx">copy</strong>&nbsp;means a completely new object with new data that is unlinked from the original DataFrame</li>
+<li id="8648" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">The reason the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning exists, is because you might be trying to make an assignment that actually fails or you might be modifying the original DataFrame without knowing it.</li>
+<li id="f20d" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Regardless of why the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning was triggered, you should not ignore it.</li>
+<li id="84e2" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">You need to go back and understand what happened and probably rewrite your pandas so you don&rsquo;t trigger the warning</li>
+<li id="e73f" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">One of the most common triggers of the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning is when you do boolean selection and then try to set the values of a column like this:&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df[df['col a'] &gt; 5]['col b'] = 10</strong></code></li>
+<li id="f7b4" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Fix this chained assignment with&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc</strong></code>&nbsp;or&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.iloc</strong></code>&nbsp;like this:&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">df.loc[df['col a'] &gt; 5, 'col b'] = 10</strong></code></li>
+<li id="bd55" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">You can use&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">is_copy</strong></code>&nbsp;or the private attribute&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">_is_view</strong></code>&nbsp;to determine if you have a view or a copy</li>
+<li id="18bc" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">It is not necessary to know whether you have a view or a copy to write good pandas, because you will likely be in one of two scenarios.</li>
+<li id="2ba7" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">In Scenario 1, you will be working on one DataFrame and want to change values in it and continue to use it in its entirety</li>
+<li id="e1f6" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">In Scenario 2, you will make a subset selection, store it to a variable, and want to continue working on it independently from the original data.</li>
+<li id="743e" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">To avoid the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning, use&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.loc\.iloc</strong></code>&nbsp;for scenario 1 and the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">copy</strong></code>&nbsp;method with scenario 2.</li>
+<li id="ced9" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Personally, I avoid using&nbsp;<em class="oe">just the indexing operator</em>&nbsp;to select rows with slices because it is ambiguous.</li>
+<li id="17b4" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">I also avoid using&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">.at\.iat</strong></code>&nbsp;because it adds unneeded complexity and adds no increased functionality.</li>
+</ul>
+<h1 id="7c5b" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Get the All Access Pass!</h1>
+<p id="1476" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Get all of my current and future material for one low price with the&nbsp;<a class="bu bq lt lu lv lw" href="http://b.link/ddallaccessm" target="_blank" rel="noopeneer noopener noreferrer">All Access Pass!</a>&nbsp;The primary courses available are the following:</p>
+<ul class="">
+<li id="cf93" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls mp mq mr" data-selectable-paragraph=""><a class="bu bq lt lu lv lw" href="http://b.link/exercisepythonm" target="_blank" rel="noopeneer noopener noreferrer">Exercise Python</a></li>
+<li id="4ce5" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph=""><a class="bu bq lt lu lv lw" href="http://b.link/MDAPM" target="_blank" rel="noopeneer noopener noreferrer">Master Data Analysis with Python</a></li>
+<li id="5b62" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph=""><a class="bu bq lt lu lv lw" href="http://b.link/MMLPM" target="_blank" rel="noopeneer noopener noreferrer">Master Machine Learning with Python</a></li>
+</ul>
+<h1 id="0817" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercises</h1>
+<ul class="">
+<li id="108f" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls mp mq mr" data-selectable-paragraph="">The exercises are located below and at the bottom of this&nbsp;<a class="bu bq lt lu lv lw" href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/04%20How%20NOT%20to%20select%20subsets%20of%20data.ipynb" target="_blank" rel="noopeneer noopener noreferrer">Jupyter Notebook</a></li>
+<li id="14af" class="lf lg ay ao lh b li ms lk mt lm mu lo mv lq mw ls mp mq mr" data-selectable-paragraph="">Make sure to review the&nbsp;<a class="bu bq lt lu lv lw" href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/Solutions.ipynb" target="_blank" rel="noopeneer noopener noreferrer">detailed solutions</a>&nbsp;as well after you attempt the exercises</li>
+</ul>
+<h1 id="755a" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 1</h1>
+<p id="1267" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Create a ten-item list and then use chained indexing to select the items from 2 to the end and then from this subset, the first three items.</p>
+<h1 id="b9ab" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 2</h1>
+<p id="6b08" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Get the same result from example 1 with just a single call to the indexing operator.</p>
+<p id="1e91" class="lf lg ay ao lh b li lj lk ll lm ln lo lp lq lr ls" data-selectable-paragraph="">Use the following DataFrame for the next several questions</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="0ac4" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df = pd.read_csv('../../data/sample_data.csv', index_col=0)</span></pre>
+<h1 id="b3de" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 3</h1>
+<p id="9616" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Determine whether the following line of code is chained indexing. If it is, rewrite it so that it is not.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="5580" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df[['state', 'food', 'color', 'score']]</span></pre>
+<h1 id="d7d2" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 4</h1>
+<p id="925b" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Determine whether the following line of code is chained indexing. If it is, rewrite it so that it is not.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="f8c7" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc[['Niko', 'Penelope', 'Dean', 'Cornelia', 'Jane'], ['state', 'food', 'color', 'score']]</span></pre>
+<h1 id="7a2a" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 5</h1>
+<p id="4ddf" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Determine whether the following line of code is chained indexing. If it is, rewrite it so that it is not.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="7afe" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.loc[['Niko', 'Penelope', 'Dean', 'Cornelia', 'Jane']][['state', 'food', 'color', 'score']]</span></pre>
+<h1 id="0570" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 6</h1>
+<p id="1857" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Determine whether the following line of code is chained indexing. If it is, rewrite it so that it is not.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="9b71" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df.iloc[:5].iloc[2:, 1:4]</span></pre>
+<h1 id="b17c" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 7</h1>
+<p id="9927" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Determine whether the following line of code is chained indexing. If it is, rewrite it so that it is not.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="3742" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df[df['state'] == 'TX']['age']</span></pre>
+<h1 id="3d31" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 8</h1>
+<p id="9381" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Determine whether the following line of code is chained indexing. If it is, rewrite it so that it is not.</p>
+<pre class="nd ne nf ng nh dz gi cy"><span id="44af" class="ni ly ay ao nc b eb nj nk l nl" data-selectable-paragraph="">&gt;&gt;&gt; df[['state', 'food', 'age', 'height']][['state', 'age']].loc[['Jane', 'Aaron'], ['age', 'state']]</span></pre>
+<h1 id="6328" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 9</h1>
+<p id="dab2" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Change the score for all people who are over 30 years of age to 99 without doing chained indexing.</p>
+<h1 id="4b43" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 10</h1>
+<p id="9623" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Select the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">color</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">food</strong></code>&nbsp;columns into their own variable. Then write one more line of code that will trigger the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">SettingWithCopy</strong></code>&nbsp;warning.</p>
+<h1 id="a6fc" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 11</h1>
+<p id="5629" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Select the&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">color</strong></code>&nbsp;and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">food</strong></code>&nbsp;columns into their own variable like you did in exercise 10. Do the same operation as you did without getting the warning.</p>
+<h1 id="5ef5" class="lx ly ay ao an en lz ma mb mc md me mf mg mh mi mj" data-selectable-paragraph="">Exercise 12</h1>
+<p id="09f2" class="lf lg ay ao lh b li mk lk ml lm mm lo mn lq mo ls" data-selectable-paragraph="">Change the values of&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">color</strong></code>,&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">age</strong></code>, and&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">score</strong></code>&nbsp;for&nbsp;<code class="kb mz na nb nc b"><strong class="lh mx">Niko</strong></code>&nbsp;to anything you like.</p>
+    
+  </div>
+</div>
+
+
+
+</div>
+      </div>
+      <div id="section-blog_sidebar" data-section-id="blog_sidebar">
+  <div class="section__sidebar col-lg-3">
+    
+  </div>
+
+
+
+</div>
+    </div>
+  </div>
+</div>
+        <div id="section-footer" data-section-id="footer">
+
+
+<style>
+  .container--main {
+    background: #272d34;
+  }
+  .footer {
+    background: #272d34;
+  }
+  
+</style>
+
+  <footer class="footer footer--dark footer--left" kjb-settings-id="sections_footer_settings_background_color">
+    <div class="container">
+      <div class="footer__text-container">
+        
+        
+          <span kjb-settings-id="sections_footer_settings_copyright" class="footer__copyright">&copy; 2019 Dunder Data</span>
+        
+        
+        
+          <div kjb-settings-id="sections_footer_settings_menu" class="footer__menu">
+            
+              <a class="footer__menu-item" href="https://www.dunderdata.com/pages/terms">Terms</a>
+            
+              <a class="footer__menu-item" href="https://www.dunderdata.com/pages/privacy-policy">Privacy</a>
+            
+          </div>
+        
+      </div>
+      <!-- Section Variables -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- KJB Settings Variables -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .footer .social-icons__icon,
+  .footer .social-icons__icon:hover {
+    color: #ffffff;
+  }
+  .footer .social-icons--round .social-icons__icon ,
+  .footer .social-icons--square .social-icons__icon {
+    background-color: #27ae60;
+  }
+</style>
+
+
+  <div class="social-icons social-icons--none social-icons--left">
+    <div class="social-icons__row">
+      
+        <a class="social-icons__icon fa fa-facebook" href="https://www.facebook.com/dunderdata" kjb-settings-id="sections_footer_settings_social_icon_link_facebook"></a>
+      
+      
+        <a class="social-icons__icon fa fa-twitter" href="https://www.twitter.com/tedpetrou" kjb-settings-id="sections_footer_settings_social_icon_link_twitter"></a>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+        <a class="social-icons__icon fa fa-linkedin" href="linkedin.com/company/dunderdata" kjb-settings-id="sections_footer_settings_social_icon_link_linkedin"></a>
+      
+      
+      
+      
+      
+      
+      
+    </div>
+  </div>
+
+
+    </div>
+  </footer>
+
+
+</div>
+      </div>
+    </div>
+    
+      <div id="section-pop_exit" data-section-id="pop_exit">
+
+  
+
+
+
+  
+
+
+</div>
+    
+    <div id="section-pop_two_step" data-section-id="pop_two_step">
+
+
+
+
+
+
+  
+
+
+<style>
+  #two-step {
+    display: none;
+    /*============================================================================
+      #Background Color Override
+    ==============================================================================*/
+    
+      /*============================================================================
+        #Text Color Override
+      ==============================================================================*/
+      color: ;
+    
+  }
+</style>
+
+<div id="two-step" class="pop pop--light">
+  <div class="pop__content">
+    <div class="pop__inner">
+      <div class="pop__body" style="background: #fff;">
+        <a class="pop__close">
+          Close
+        </a>
+        
+          <img src="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/assets/two_step.jpg?15776651586601868" class="img-fluid" kjb-settings-id="sections_pop_two_step_settings_image"/>
+        
+        <div class="pop__body--inner">
+          
+            <div class="block--1492725498873">
+              
+                  
+
+
+
+
+<style>
+  .block--1492725498873 .progress-wrapper .progress-bar {
+    width: 50%;
+    background-color: #27ae60;
+  }
+  .block--1492725498873 .progress-wrapper .progress {
+    background-color: #f9f9f9;
+  }
+</style>
+
+<div class="progress-wrapper" kjb-settings-id="sections_pop_two_step_blocks_1492725498873_settings_show_progress">
+  <p class="progress-percent" kjb-settings-id="sections_pop_two_step_blocks_1492725498873_settings_progress_text">50% Complete</p>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped" kjb-settings-id="sections_pop_two_step_blocks_1492725498873_settings_progress_percent"></div>
+  </div>
+</div>
+
+                
+            </div>
+          
+            <div class="block--1492725503624">
+              
+                  <div kjb-settings-id="sections_pop_two_step_blocks_1492725503624_settings_text">
+  <h3>Register for a free account</h3>
+<p>Upon registration, you'll get access to three free courses and the discount code to purchase the All Access Pass for 50% off through Cyber Monday (12/2)</p>
+</div>
+
+              
+            </div>
+          
+          
+  <form data-parsley-validate="true" data-kjb-disable-on-submit="true" action="https://www.dunderdata.com/forms/228647/form_submissions" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="17OH2mE7VL0rxZE+Tjx1M5XQPkAdRk7LaE/jONwOq+f6CPzzCfVXACWeMVvWKWxXSy1evN2MRRNlSVBvyi1NeA==" /><input type="text" name="website_url" autofill="off" placeholder="Skip this field" style="display: none;" /><input type="hidden" name="kjb_fk_checksum" autofill="off" value="f6889c76bf317fe871eac63f8d017fce" />
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <style>
+      /*============================================================================
+        #Individual CTA Style
+      ==============================================================================*/
+      .btn--sections_pop_two_step_settings_btn_text.btn--solid {
+        background: #27ae60;
+        border-color: #27ae60;
+        color: #fff;
+      }
+      .btn--sections_pop_two_step_settings_btn_text.btn--outline {
+        border-color: #27ae60;
+        color: #27ae60;
+      }
+    </style>
+    <div class="pop__form" kjb-settings-id="sections_pop_two_step_settings_form">
+      <input type="hidden" name="thank_you_url" value="">
+      <div class="row optin optin--stacked">
+        
+          <div class="col-sm-12">
+            <div class="email-field form-group"><input required="required" class="form-control" placeholder="Email" data-parsley-remote="true" data-parsley-remote-validator="kjb_email_validator" data-parsley-remote-message="false" type="email" name="form_submission[email]" id="form_submission_email" /></div>
+          </div>
+        
+        <div class="col-sm-12">
+          <button class="btn btn--sections_pop_two_step_settings_btn_text btn--auto btn--solid btn-form" id="form-button" type="submit" kjb-settings-id="sections_pop_two_step_settings_btn_text">Submit</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+    <!-- Javascripts ================================================== -->
+    <script src="https://ap-kajabi-storefronts-production.global.ssl.fastly.net/assets/core-bd7869093471de8f4a806e4479857a9e307129ee6fedf20d1571456adf802e50.js"></script>
+    <script charset='ISO-8859-1' src='https://fast.wistia.com/assets/external/E-v1.js'></script>
+    <script charset='ISO-8859-1' src='https://fast.wistia.com/labs/crop-fill/plugin.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ouibounce/0.0.12/ouibounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
+    <script src="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/assets/scripts.js?15776651586601868"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.8/js/tether.min.js"></script><!-- Tether for Bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="sha384-VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
+    
+      <script id="dsq-count-scr" src="//.disqus.com/count.js" async=""></script>
+    
+  </body>
+</html>
