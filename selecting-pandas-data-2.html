@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <!-- Title and description ================================================== -->
+    
+              <meta name="csrf-param" content="authenticity_token">
+              <meta name="csrf-token" content="4ZQDV6y38GUl0V5HtbCV9tlZgTlsifOQQpMjbk1ON6LML3h+xHnz2CuK/iItpYySB6ThxaxD+EhPlZA5W23RPQ==">
+            
+    <title>
+      
+        Selecting Subsets of Data in Pandas: Part 1
+      
+    </title>
+    <meta charset="utf-8" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="description" content="Learn how to properly select subsets of data from a pandas DataFrame." />
+    
+
+    <!-- Helpers ================================================== -->
+    <meta property="og:type" content="website">
+<meta property="og:url" content="https://www.dunderdata.com/blog/selecting-subsets-of-data-in-pandas-part-1">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:title" content="Selecting Subsets of Data in Pandas: Part 1">
+<meta name="twitter:title" content="Selecting Subsets of Data in Pandas: Part 1">
+
+
+<meta property="og:description" content="Learn how to properly select subsets of data from a pandas DataFrame.">
+<meta name="twitter:description" content="Learn how to properly select subsets of data from a pandas DataFrame.">
+
+
+
+    <link href="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/settings_images/cPKNEPCZRRKWPYFXm8mC_DD_favicon_white_space.png?v=2" rel="shortcut icon" />
+    <link rel="canonical" href="https://www.dunderdata.com/blog/selecting-subsets-of-data-in-pandas-part-1" />
+
+    <!-- CSS ================================================== -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    
+      <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700,400italic,700italic|Montserrat:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" media="screen" href="https://ap-kajabi-storefronts-production.global.ssl.fastly.net/assets/core-36d711acd6b6b6ebec34a694a9eef8bf1660c6ae66a0df925956db2bc4a92888.css" />
+    <link rel="stylesheet" media="screen" href="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/assets/styles.css?15776651586601868" />
+    <link rel="stylesheet" media="screen" href="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/assets/overrides.css?15776651586601868" />
+
+    <!-- Full Bleed Or Container ================================================== -->
+    
+
+    <!-- Header hook ================================================== -->
+    <link rel="alternate" type="application/rss+xml" title="Ted Petrou&#39;s Python Data Science and Machine Learning Tutorials" href="https://www.dunderdata.com/blog.rss" /><script style="text/javascript">
+  var Kajabi = Kajabi || {};
+</script>
+<script style="text/javascript">
+  Kajabi.currentSiteUser = {
+    "id" : "-1",
+    "type" : "Guest"
+  };
+</script>
+<script style="text/javascript">
+  Kajabi.theme = {
+    activeThemeName: "Premier Site",
+    previewThemeId: null,
+    editor: false
+  };
+</script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)
+},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-119777567-4', 'auto');
+ga('send', 'pageview');
+</script>
+<style type="text/css">
+  #editor-overlay {
+    display: none;
+    border-color: #2E91FC;
+    position: absolute;
+    background-color: rgba(46,145,252,0.05);
+    border-style: dashed;
+    border-width: 3px;
+    border-radius: 3px;
+    pointer-events: none;
+    cursor: pointer;
+    z-index: 10000000000;
+  }
+  .editor-overlay-button {
+    color: white;
+    background: #2E91FC;
+    border-radius: 2px;
+    font-size: 13px;
+    margin-left: -24px;
+    margin-top: -12px;
+    padding: 3px 10px;
+    text-transform:uppercase;
+    font-weight:bold;
+    letter-spacing:1.5px;
+
+    left: 50%;
+    top: 50%;
+    position: absolute;
+  }
+</style>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GN9DJ2');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+ fbq('init', '2224829977846603'); 
+fbq('track', 'PageView');
+</script>
+<noscript>
+ <img height="1" width="1" 
+src="https://www.facebook.com/tr?id=2224829977846603&ev=PageView
+&noscript=1"/>
+</noscript>
+<!-- End Facebook Pixel Code -->
+
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GN9DJ2"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div class="container container--main">
+      <div class="content-wrap">
+        <div id="section-header" data-section-id="header"><!-- Header Variables -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- KJB Settings Variables -->
+
+
+
+
+
+<style>
+  .header {
+    background: #fff;
+  }
+  
+  .header .logo--text, .header--left .header-menu a {
+    line-height: 40px;
+  }
+  .header .logo--image {
+    height: 40px;
+  }
+  .header .logo img {
+    max-height: 40px;
+  }
+  .announcement {
+      background: #2e91fc;
+      color: #fff;
+    }
+  /*============================================================================
+    #Header User Menu Styles
+  ==============================================================================*/
+  .header .user__dropdown {
+    background: #fff;
+    top: 71px;
+  }
+  .header--center .user__dropdown {
+    top: 50px;
+  }
+  
+  /*============================================================================
+    #Header Responsive Styles
+  ==============================================================================*/
+  @media (max-width: 767px) {
+    .header .logo--text {
+      line-height: 40px;
+    }
+    .header .logo--image {
+      max-height: 40px;
+    }
+    .header .logo img {
+      max-height: 40px;
+    }
+    .header .header-ham {
+      top: 20px;
+    }
+  }
+</style>
+
+
+
+  <!-- Announcement Variables -->
+
+
+
+
+
+
+<!-- KJB Settings Variables -->
+
+
+<style>
+  .announcement {
+    background: #2e91fc;
+    color: #fff;
+  }
+  a.announcement:hover {
+    color: #fff;
+  }
+</style>
+
+
+
+  <div class="header header--light header--left" kjb-settings-id="sections_header_settings_background_color">
+    <div class="container">
+      
+        <a href="/" class="logo logo--image">
+          <img src="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/settings_images/NyrRjGSTnWKumhv2A6X6_gray_and_green_only.png" kjb-settings-id="sections_header_settings_logo"/>
+        </a>
+      
+      <div class="header-ham">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div kjb-settings-id="sections_header_settings_menu" class="header-menu">
+        
+          
+            <a href="https://www.dunderdata.com/online-courses">Online Courses</a>
+          
+            <a href="https://www.dunderdata.com/in-person-courses">In-Person Courses</a>
+          
+            <a href="https://www.dunderdata.com/live-online-courses">Live Online Courses</a>
+          
+            <a href="https://www.dunderdata.com/corporate">Corporate</a>
+          
+            <a href="https://www.dunderdata.com/blog">Blog</a>
+          
+        
+        
+        <!-- User Dropdown Variables -->
+
+
+
+
+
+<!-- KJB Settings Variables -->
+
+
+
+
+
+
+  <span kjb-settings-id="sections_header_settings_language_login"><a href="/login">Login</a></span>
+
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+        
+
+
+        <div id="" class="section section--global">
+  <div class="container">
+    <div class="row section__row">
+      <div class="section__body col-lg-9">
+        <div id="section-blog_post_body" data-section-id="blog_post_body"><div class="panel blog fluid-video">
+  <div class="panel__body">
+    <h1 class="blog__title">Selecting Subsets of Data in Pandas: Part 1</h1>
+    <div class="blog__info">
+      
+        <span class="blog__tags" kjb-settings-id="sections_blog_post_body_settings_show_tags">
+          
+            
+              <a href="https://www.dunderdata.com/blog?tag=selecting+subsets+of+data">selecting subsets of data</a>
+            
+          
+        </span>
+      
+      
+        <span class="blog__date" kjb-settings-id="sections_blog_post_body_settings_show_date">Jun 05, 2019</span>
+      
+      
+    </div>
+    
+    
+  
+
+
+    <p id="f026" class="graf graf--p graf-after--h3">This article is available as a&nbsp;<a class="markup--anchor markup--p-anchor" href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/01%20Selecting%20Subsets%20with%20%5B%20%5D%2C%20.loc%20and%20.iloc.ipynb" target="_blank" rel="nofollow noopener noreferrer" data-href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/01%20Selecting%20Subsets%20with%20%5B%20%5D%2C%20.loc%20and%20.iloc.ipynb">Jupyter Notebook</a>&nbsp;complete with exercises at the bottom to practice and&nbsp;<a class="markup--anchor markup--p-anchor" href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/Solutions.ipynb" target="_blank" rel="nofollow noopener noreferrer" data-href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/Solutions.ipynb">detailed solutions</a>&nbsp;in another notebook.</p>
+<h3 id="c635" class="graf graf--h3 graf-after--p">Part 1: Selection with&nbsp;<code class="markup--code markup--h3-code">[ ]</code>,&nbsp;<code class="markup--code markup--h3-code">.loc</code>&nbsp;and&nbsp;<code class="markup--code markup--h3-code">.iloc</code></h3>
+<p id="f2cb" class="graf graf--p graf-after--h3">This is the beginning of a four-part series on how to select subsets of data from a pandas DataFrame or Series. Pandas offers a wide variety of options for subset selection which necessitates multiple articles. This series is broken down into the following four topics.</p>
+<ol class="postList">
+<li id="39e3" class="graf graf--li graf-after--p"><a class="markup--anchor markup--li-anchor" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopener noreferrer" data-href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c">Selection with&nbsp;</a><code class="markup--code markup--li-code"><a class="markup--anchor markup--li-anchor" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopener noreferrer" data-href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c">[]</a></code><a class="markup--anchor markup--li-anchor" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopener noreferrer" data-href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c">,&nbsp;</a><code class="markup--code markup--li-code"><a class="markup--anchor markup--li-anchor" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopener noreferrer" data-href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c">.loc</a></code><a class="markup--anchor markup--li-anchor" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopener noreferrer" data-href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c">&nbsp;and&nbsp;</a><code class="markup--code markup--li-code"><a class="markup--anchor markup--li-anchor" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c" target="_blank" rel="noopener noreferrer" data-href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c">.iloc</a></code></li>
+<li id="ed30" class="graf graf--li graf-after--li"><a class="markup--anchor markup--li-anchor" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-39e811c81a0c" target="_blank" rel="noopener noreferrer" data-href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-39e811c81a0c">Boolean indexing</a></li>
+<li id="a680" class="graf graf--li graf-after--li"><a class="markup--anchor markup--li-anchor" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-part-3-d5704b4b9116" target="_blank" rel="noopener noreferrer" data-href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-part-3-d5704b4b9116">Assigning subsets of data</a></li>
+<li id="3d54" class="graf graf--li graf-after--li"><a class="markup--anchor markup--li-anchor" href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-part-4-c4216f84d388" target="_blank" rel="noopener noreferrer" data-href="https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-part-4-c4216f84d388">How NOT to select subsets of data</a></li>
+</ol>
+<h3 class="graf graf--h3">Master Data Analysis with&nbsp;Python</h3>
+<p class="graf graf--p">Begin your journey mastering data analysis using python with my <a class="markup--anchor markup--p-anchor" href="https://www.dunderdata.com/intro-to-pandas" target="_blank" rel="noopener noreferrer" data-href="http://bit.ly/2E33Pih">free Intro to Pandas series</a>.</p>
+<h3 id="9c17" class="graf graf--h3 graf-after--li">Assumptions before we&nbsp;begin</h3>
+<p id="8a6d" class="graf graf--p graf-after--h3">These series of articles assume you have no knowledge of pandas, but that you understand the fundamentals of the Python programming language. It also assumes that you have installed pandas on your machine.</p>
+<p id="1f85" class="graf graf--p graf-after--p">The easiest way to get pandas along with Python and the rest of the main scientific computing libraries is to install the&nbsp;<a class="markup--anchor markup--p-anchor" href="https://www.anaconda.com/download/" target="_blank" rel="nofollow noopener noreferrer" data-href="https://www.anaconda.com/download/">Anaconda distribution</a>.</p>
+<p id="23bc" class="graf graf--p graf-after--p">If you have no knowledge of Python then I suggest reading <a href="https://www.dunderdata.com/offers/7EaLyimi/checkout">Exercise Python</a> first.</p>
+<h4 id="58f8" class="graf graf--h3 graf-after--li"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="591bf79e38b3">The importance of making subset selections</span></h4>
+<p id="5e27" class="graf graf--p graf-after--h3">You might be wondering why there need to be so many articles on selecting&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="591bf79e38b3">subsets</span>&nbsp;of data. This topic is extremely important to pandas and it&rsquo;s unfortunate that it is fairly complicated because subset selection happens frequently during an actual analysis.&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">Because you are frequently making subset selections, you need to master it in order to make your life with pandas easier.</span></p>
+<h4 id="557e" class="graf graf--h3 graf-after--p">Always reference the documentation</h4>
+<p id="a7ec" class="graf graf--p graf-after--h3">The material in this article is also covered&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="591bf79e38b3">in the official pandas documentation on&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="591bf79e38b3 1dc0ee5fe9a5"><a class="markup--anchor markup--p-anchor" href="https://pandas.pydata.org/pandas-docs/stable/indexing.html" target="_blank" rel="nofollow noopener noreferrer" data-href="http://pandas.pydata.org/pandas-docs/stable/indexing.html">Indexing</a></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="591bf79e38b3"><a class="markup--anchor markup--p-anchor" href="https://pandas.pydata.org/pandas-docs/stable/indexing.html" target="_blank" rel="nofollow noopener noreferrer" data-href="http://pandas.pydata.org/pandas-docs/stable/indexing.html">&nbsp;and Selecting Data</a>.</span>&nbsp;I highly recommend that you read that part of the documentation along with this tut<span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">orial. In fact, the documentation is one of the&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 5dc0c6bc6f25">primary</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;means for mastering pandas</span>. I wrote a step-by-step article,&nbsp;<a class="markup--anchor markup--p-anchor" href="https://medium.com/dunder-data/how-to-learn-pandas-108905ab4955" target="_blank" rel="nofollow noopener noreferrer" data-href="https://medium.com/dunder-data/how-to-learn-pandas-108905ab4955">How to Learn Pandas</a>, which gives suggestions on how to use the documentation as you master pandas.</p>
+<h4 id="6f55" class="graf graf--h3 graf-after--p">The anatomy of a DataFrame and a&nbsp;Series</h4>
+<p id="c26b" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="70662e8faedf 591bf79e38b3 84fb69568f18">The pandas library&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="70662e8faedf 591bf79e38b3 84fb69568f18 205179d0a4a7">has two primary containers</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="70662e8faedf 591bf79e38b3 84fb69568f18">&nbsp;of data, the&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="70662e8faedf 591bf79e38b3 84fb69568f18 58783e972e8c 205179d0a4a7">DataFrame and the Series</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="591bf79e38b3 84fb69568f18 205179d0a4a7">.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;You will spend nearly all your time</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 5dc0c6bc6f25">&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">working with both of the objects when you use pandas.</span>&nbsp;The DataFrame is used more than the Series, so let&rsquo;s take a look at an image of it first.</p>
+<figure id="9176" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*ZSehcrMtBWN7_qCWq_HiSg.png" data-width="1258" data-height="412" data-action="zoom" data-action-value="1*ZSehcrMtBWN7_qCWq_HiSg.png" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="23"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*ZSehcrMtBWN7_qCWq_HiSg.png" data-src="https://cdn-images-1.medium.com/max/1600/1*ZSehcrMtBWN7_qCWq_HiSg.png" /></div>
+</div>
+<figcaption class="imageCaption">Anatomy of a&nbsp;<span class="markup--quote markup--figure-quote is-other" data-creator-ids="205179d0a4a7">DataFrame</span></figcaption>
+</figure>
+<p id="27aa" class="graf graf--p graf-after--figure">This image comes with some added illustrations to highlight its components. At first glance, the DataFrame looks like any other two-dimensional table of data that you have seen. It has rows and it has columns. Technically, there are three main components of the DataFrame.</p>
+<h4 id="d467" class="graf graf--h3 graf-after--p">The three components of a DataFrame</h4>
+<p id="446d" class="graf graf--p graf-after--h3">A DataFrame is composed of three different components, the&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="5e50b9c38fa8"><strong class="markup--strong markup--p-strong">index</strong>,&nbsp;<strong class="markup--strong markup--p-strong">columns</strong>, and the&nbsp;<strong class="markup--strong markup--p-strong">data</strong></span>. The data is also known as the&nbsp;<strong class="markup--strong markup--p-strong">values</strong>.</p>
+<p id="91dc" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-me is-other" data-creator-ids="a4984470072e 84fb69568f18 16cbd2548673 4a70f9b8a11f 591bf79e38b3 6ff3b5fa7cd 29a0282ac25f 1816eca732ce 37e765b88dfc 90d83ca0d63a f1bb54bb3ba3 ce24575a6b20 304dd27b13e6 fbb862d43931 anon cf7f60f2eeb3 be52c78c19c8 b4eb17b488be 2d881f9d540f ffa93c4e1d69 40c659e9dff8 b86d1f081f45 eb0829790b91 b016ca86585b">The index represents the sequence of values on the far left-hand side of the DataFrame. All the values in the index are in&nbsp;<strong class="markup--strong markup--p-strong">bold</strong>&nbsp;font. Each individual value of the index is called a&nbsp;<strong class="markup--strong markup--p-strong">label</strong>. Sometimes the index is referred to as the&nbsp;<strong class="markup--strong markup--p-strong">row labels</strong>. In the example above, the row labels are not very interesting and are just the integers beginning from 0 up to n-1, where n is the number of rows in the table. Pandas defaults DataFrames with this simple&nbsp;</span><span class="markup--quote markup--p-quote is-me is-other" data-creator-ids="a4984470072e 84fb69568f18 16cbd2548673 4a70f9b8a11f 591bf79e38b3 6ff3b5fa7cd 29a0282ac25f 1816eca732ce 37e765b88dfc 90d83ca0d63a f1bb54bb3ba3 ce24575a6b20 304dd27b13e6 fbb862d43931 anon cf7f60f2eeb3 be52c78c19c8 b4eb17b488be 2d881f9d540f ffa93c4e1d69 40c659e9dff8 b86d1f081f45 eb0829790b91 b016ca86585b">index.</span></p>
+<p id="6f72" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="1816eca732ce">The columns&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="1816eca732ce 5fb3cf09f17e">are the sequenc</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="1816eca732ce">e of values at the very top of the DataFrame. They are also in&nbsp;<strong class="markup--strong markup--p-strong">bold</strong>&nbsp;font. Each individual value of the columns is called a&nbsp;<strong class="markup--strong markup--p-strong">column</strong>,</span>&nbsp;but can also be referred to as&nbsp;<strong class="markup--strong markup--p-strong">column name</strong>&nbsp;or&nbsp;<strong class="markup--strong markup--p-strong">column label</strong>.</p>
+<p id="5545" class="graf graf--p graf-after--p">Everything else not in bold font is the data or values. You will sometimes hear DataFrames referred to as&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02"><strong class="markup--strong markup--p-strong">tabular</strong>&nbsp;data</span>. This is just another name for a rectangular table data with rows and columns.</p>
+<h4 id="0d5d" class="graf graf--h3 graf-after--p">Axis and&nbsp;axes</h4>
+<p id="1460" class="graf graf--p graf-after--h3">It is also common terminology to refer to the rows or columns as an&nbsp;<strong class="markup--strong markup--p-strong">axis</strong>. Collectively, we call them&nbsp;<strong class="markup--strong markup--p-strong">axes</strong>. So,&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="9896d49beda6">a row is an axis and a column is another axis.</span></p>
+<p id="58f0" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="75fc9b659d8b 84fb69568f18">The word axis appears as a parameter in many DataFrame methods</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 599f93aa4b02 bd96579826af">Pandas allows you to choose the direction of how the method will work with this parameter. This has nothing to do with subset selection so you can just ignore it for now.</span></p>
+<h4 id="4e95" class="graf graf--h3 graf-after--p"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">Each row has a label and each column has a&nbsp;label</span></h4>
+<p id="e5d0" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="975cecc067f9">The main takeaway from the DataFrame anatomy is that each row has a label and each column has a label. These labels are used to refer to specific rows or columns in the DataFrame. It&rsquo;s the same as how humans use names to refer to specific people.</span></p>
+<h4 id="2636" class="graf graf--h3 graf-after--p">What is subset selection?</h4>
+<p id="1500" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b0ed2573dd45">Before we start doing subset selection, it might be good to define what it is.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b0ed2573dd45 36bb569752a2">Subset selection is simply selecting pa</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="36bb569752a2">rticular rows and columns of data from a DataFrame (or Series).</span>&nbsp;This could mean selecting all the rows and some of the columns, some of the rows and all of the columns, or some of each of the rows and columns.</p>
+<h4 id="3caf" class="graf graf--h3 graf-after--p">Example: Selecting some columns and all&nbsp;rows</h4>
+<p id="4307" class="graf graf--p graf-after--h3">Let&rsquo;s see some images of subset selection. We will first look at a sample DataFrame with fake data.</p>
+<figure id="259b" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*8F3TgEXSmJ3G4cRkiY56-Q.png" data-width="407" data-height="266" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="48"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*8F3TgEXSmJ3G4cRkiY56-Q.png" data-src="https://cdn-images-1.medium.com/max/1600/1*8F3TgEXSmJ3G4cRkiY56-Q.png" /></div>
+</div>
+<figcaption class="imageCaption"></figcaption>
+</figure>
+<p id="fed4" class="graf graf--p graf-after--figure">Let&rsquo;s say we want to select just the columns&nbsp;<code class="markup--code markup--p-code">color</code>,&nbsp;<code class="markup--code markup--p-code">age</code>, and&nbsp;<code class="markup--code markup--p-code">height</code>&nbsp;but keep all the rows.</p>
+<figure id="375c" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*5kyMLYDbLXCGvHCU17OEYQ.png" data-width="410" data-height="270" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="48"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*5kyMLYDbLXCGvHCU17OEYQ.png" data-src="https://cdn-images-1.medium.com/max/1600/1*5kyMLYDbLXCGvHCU17OEYQ.png" /></div>
+</div>
+</figure>
+<p id="feef" class="graf graf--p graf-after--figure">Our final DataFrame would look like this:</p>
+<figure id="63dd" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*lvkfp1UmWVp-ugCilEn7iw.png" data-width="241" data-height="270" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="67" height="75"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*lvkfp1UmWVp-ugCilEn7iw.png" data-src="https://cdn-images-1.medium.com/max/1600/1*lvkfp1UmWVp-ugCilEn7iw.png" /></div>
+</div>
+</figure>
+<h4 id="fa5d" class="graf graf--h3 graf-after--figure">Example: Selecting some rows and all&nbsp;columns</h4>
+<p id="3db7" class="graf graf--p graf-after--h3">We can also make selections that select just some of the rows. Let&rsquo;s select the rows with labels&nbsp;<code class="markup--code markup--p-code">Aaron</code>&nbsp;and&nbsp;<code class="markup--code markup--p-code">Dean</code>&nbsp;along with all of the columns:</p>
+<figure id="321f" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*aB19DS5gDeAoIZ0Qkgm1pQ.png" data-width="410" data-height="270" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="48"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*aB19DS5gDeAoIZ0Qkgm1pQ.png" data-src="https://cdn-images-1.medium.com/max/1600/1*aB19DS5gDeAoIZ0Qkgm1pQ.png" /></div>
+</div>
+</figure>
+<p id="fc59" class="graf graf--p graf-after--figure">Our final DataFrame would like:</p>
+<figure id="1379" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<img class="graf-image" src="https://cdn-images-1.medium.com/max/1600/1*T02_TrcvbfKkU7U7J2-ugw.png" data-image-id="1*T02_TrcvbfKkU7U7J2-ugw.png" data-width="390" data-height="97" /></div>
+</figure>
+<h4 id="fecd" class="graf graf--h3 graf-after--figure">Example: Selecting some rows and some&nbsp;columns</h4>
+<p id="f787" class="graf graf--p graf-after--h3">Let&rsquo;s combine the selections from above and select the columns&nbsp;<code class="markup--code markup--p-code">color</code>,&nbsp;<code class="markup--code markup--p-code">age</code>, and&nbsp;<code class="markup--code markup--p-code">height</code>&nbsp;for only the rows with labels&nbsp;<code class="markup--code markup--p-code">Aaron</code>&nbsp;and&nbsp;<code class="markup--code markup--p-code">Dean</code>.</p>
+<figure id="ea6b" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*SMzyeMGukFU7y9lSwDim5A.png" data-width="407" data-height="276" data-is-featured="true" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="50"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*SMzyeMGukFU7y9lSwDim5A.png" data-src="https://cdn-images-1.medium.com/max/1600/1*SMzyeMGukFU7y9lSwDim5A.png" /></div>
+</div>
+</figure>
+<p id="799d" class="graf graf--p graf-after--figure">Our final DataFrame would look like this:</p>
+<figure id="a1e1" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<img class="graf-image" src="https://cdn-images-1.medium.com/max/1600/1*wXdCm9RlUbMiPS9Q-cFa9g.png" data-image-id="1*wXdCm9RlUbMiPS9Q-cFa9g.png" data-width="216" data-height="95" /></div>
+</figure>
+<h4 id="dcc8" class="graf graf--h3 graf-after--figure"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">Pandas&nbsp;</span><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac 5350ac63ea53 ccd0668048a2">dual references:</span><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac ccd0668048a2">&nbsp;by label and by integer&nbsp;location</span></h4>
+<p id="2cef" class="graf graf--p graf-after--h3">We already mentioned that each row and each column have a specific label that can be used to reference them. This is displayed in bold font in the DataFrame.</p>
+<p id="b118" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18">But, what hasn&rsquo;t been mentioned, is that&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 5e50b9c38fa8">each row and column may be referenced by an integer as well</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18">. I call this&nbsp;<strong class="markup--strong markup--p-strong">integer location</strong>.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 b4e4830dc90d">The integer location begins at 0 and ends at n-1 for each row and column</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">. Take a look above at our sample DataFrame one more time.</span></p>
+<p id="dbff" class="graf graf--p graf-after--p">The rows with la<span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">bels&nbsp;<code class="markup--code markup--p-code">Aaron</code>&nbsp;and&nbsp;<code class="markup--code markup--p-code">Dean</code>&nbsp;ca</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 dd36cd83da2d">n</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;also be referenced by their respective integer locations 2 and 4. Similarly, the columns&nbsp;<code class="markup--code markup--p-code">color</code>,&nbsp;<code class="markup--code markup--p-code">age</code>&nbsp;and<code class="markup--code markup--p-code">height</code>&nbsp;can be referenced by their integer locations 1, 3, and 4.</span></p>
+<p id="7da7" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02">The documentation refer</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 84fb69568f18">s to integer location as&nbsp;<strong class="markup--strong markup--p-strong">position</strong>.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;I don&rsquo;t particularly like this terminology as it's not as explicit as integer location. The key thing term here is INTEGER.</span></p>
+<h4 id="dc62" class="graf graf--h3 graf-after--p"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="ccd0668048a2">What&rsquo;s the difference between indexing and selecting subsets of&nbsp;data?</span></h4>
+<p id="54b9" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4be312feb58 515f2936faad 921422686243 7d8db53a2d09 613e8869b6c5">The&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4be312feb58 515f2936faad 921422686243 7d8db53a2d09 613e8869b6c5 f06435e31e62">documentation uses the term&nbsp;<strong class="markup--strong markup--p-strong">indexing</strong>&nbsp;frequently. This term is essentially just a one-word phrase to say &lsquo;subset selection&rsquo;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="515f2936faad 921422686243 7d8db53a2d09 613e8869b6c5 f06435e31e62">.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="f06435e31e62">&nbsp;I prefer the term subset selection as, again, it is more&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="f06435e31e62 591bf79e38b3">descriptive</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="f06435e31e62">&nbsp;of what is actually happening.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="f06435e31e62 7d8db53a2d09">Indexing is also the term used in the official Python documentation</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="7d8db53a2d09">.</span></p>
+<h4 id="6dbe" class="graf graf--h3 graf-after--p"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">Focusing only on&nbsp;<code class="markup--code markup--h3-code">[]</code>,&nbsp;<code class="markup--code markup--h3-code">.loc</code>, and&nbsp;<code class="markup--code markup--h3-code u-paddingRight0 u-marginRight0">.</code></span><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac 1cda53dc803"><code class="markup--code markup--h3-code u-paddingLeft0 u-marginLeft0">iloc</code></span></h4>
+<p id="cb0c" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">There are many ways to&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 c7ca1cd3edaa">select subsets of data, but in this article, we will only cover the usage of&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 c7ca1cd3edaa a8df52156542">the&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 c7ca1cd3edaa a8df52156542 ccd0668048a2 467819a0ea0a">square brackets&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 c7ca1cd3edaa a8df52156542 ccd0668048a2 467819a0ea0a eb0829790b91 5350ac63ea53">(<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">[]</strong></code>),&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>&nbsp;and&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc</strong></code></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 a8df52156542 ccd0668048a2 467819a0ea0a 5350ac63ea53">.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 a8df52156542 ccd0668048a2 467819a0ea0a 5350ac63ea53 921422686243">Collectively,&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="a8df52156542 ccd0668048a2 467819a0ea0a 5350ac63ea53 921422686243 eb0829790b91">they are called&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="a8df52156542 ccd0668048a2 467819a0ea0a 5350ac63ea53 921422686243 eb0829790b91 84fb69568f18">the&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="a8df52156542 ccd0668048a2 467819a0ea0a 5350ac63ea53 921422686243 eb0829790b91 84fb69568f18 c7ca1cd3edaa 59c11c7589ac"><strong class="markup--strong markup--p-strong">indexers</strong></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="a8df52156542 467819a0ea0a 5350ac63ea53 84fb69568f18">.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;These are by far the most common ways to select data. A different part of this Series will discuss a few methods that can be used to make&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 38da10558207">subset</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;selections.</span></p>
+<p id="e333" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">If you have a DataFrame,&nbsp;<code class="markup--code markup--p-code">df</code>, your subset selection will look something like the following:</span></p>
+<p><span class="markup--quote markup--pre-quote is-other" data-creator-ids="59c11c7589ac b4e4830dc90d"><code class="markup--code markup--pre-code">df[ ]<br />df.loc[ ]<br />df.iloc[ ]</code></span></p>
+<p id="7dd4" class="graf graf--p graf-after--pre">An actual subset selection will have something inside of the square brackets.&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="5350ac63ea53">All selections in this article will take place inside of those square brackets.</span></p>
+<p id="32fc" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="467819a0ea0a">Notice that the square brackets also follow&nbsp;<code class="markup--code markup--p-code">.loc</code>&nbsp;and&nbsp;<code class="markup--code markup--p-code u-paddingRight0 u-marginRight0">.il</code></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="467819a0ea0a e09258fdbd8d"><code class="markup--code markup--p-code u-paddingLeft0 u-marginLeft0">oc</code>.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="467819a0ea0a e09258fdbd8d 7d8db53a2d09">A</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="467819a0ea0a 7d8db53a2d09">ll indexing in Python happens inside of these square brackets.</span></p>
+<h4 id="4ed6" class="graf graf--h3 graf-after--p">A term for just those square&nbsp;brackets</h4>
+<p id="b535" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4be312feb58 2d881f9d540f 84fb69568f18">The term&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4be312feb58 2d881f9d540f 84fb69568f18 599f93aa4b02 ccd0668048a2"><strong class="markup--strong markup--p-strong">indexing operator</strong></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4be312feb58 2d881f9d540f 84fb69568f18 ccd0668048a2">&nbsp;is used to refer to the square brackets following an object</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">. The&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>&nbsp;and&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc</strong></code></span>&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="def012405516 2f4c80fa87d9">indexers</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2f4c80fa87d9">&nbsp;also use the indexing operator to make selections.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2f4c80fa87d9 b4be312feb58">I will use the term&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2f4c80fa87d9 b4be312feb58 59c11c7589ac 84fb69568f18"><strong class="markup--strong markup--p-strong">just the&nbsp;</strong></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2f4c80fa87d9 b4be312feb58 59c11c7589ac 84fb69568f18 ccd0668048a2"><strong class="markup--strong markup--p-strong">indexing operator</strong>&nbsp;to refer to<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">df[]</strong></code></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2f4c80fa87d9 84fb69568f18">. This will distinguish it from&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">df.loc[]</strong></code>&nbsp;and</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">df.iloc[]</strong></code></span>.</p>
+<h4 id="eef7" class="graf graf--h3 graf-after--p"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="e9744b392668">Read</span>&nbsp;in data into a DataFrame with&nbsp;<code class="markup--code markup--h3-code">read_csv</code></h4>
+<p id="3c60" class="graf graf--p graf-after--h3">Let&rsquo;s begin using pandas to read in a DataFrame, and from there, use the indexing operator by itself to select subsets of data. All the data for these tutorials are in the&nbsp;<strong class="markup--strong markup--p-strong">data</strong>&nbsp;directory.</p>
+<p id="180b" class="graf graf--p graf-after--p">We will use the&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">read_csv</strong></code>&nbsp;function to read in data into a DataFrame. We pass the path to the file as the first argument to the function.&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac 599f93aa4b02">We will also use the&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac 599f93aa4b02 467819a0ea0a ccd0668048a2"><code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">index_col</strong></code>&nbsp;parameter to select the first column of data as the index</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02">&nbsp;(more on this later).</span></p>
+<pre id="cb38" class="graf graf--pre graf-after--p">&gt;&gt;&gt; import pandas as pd<br />&gt;&gt;&gt; import numpy as np</pre>
+<pre id="15ec" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; df = pd.read_csv('data/sample_data.csv', index_col=0)<br />&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="21fc89283e81">df</span></pre>
+<figure id="87a7" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*8F3TgEXSmJ3G4cRkiY56-Q.png" data-width="407" data-height="266" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="48"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*8F3TgEXSmJ3G4cRkiY56-Q.png" data-src="https://cdn-images-1.medium.com/max/1600/1*8F3TgEXSmJ3G4cRkiY56-Q.png" /></div>
+</div>
+</figure>
+<h4 id="5c39" class="graf graf--h3 graf-after--figure">Extracting the individual DataFrame components</h4>
+<p id="b25d" class="graf graf--p graf-after--h3">Earlier, we mentioned the three components of the DataFrame. The index, columns and data (values). We can extract each of these components into their own variables. Let&rsquo;s do that and then inspect them:</p>
+<pre id="858d" class="graf graf--pre graf-after--p">&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="3accb8d7594e">index = df.index<br />&gt;&gt;&gt; columns = df.columns<br />&gt;&gt;&gt; </span><span class="markup--quote markup--pre-quote is-other" data-creator-ids="3accb8d7594e ccd0668048a2">values = df.values</span></pre>
+<pre id="bd0d" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; index<br /><code class="markup--code markup--pre-code">Index(['Jane', 'Niko', 'Aaron', 'Penelope', 'Dean', 'Christina', <br />       'Cornelia'], dtype='object')</code></pre>
+<pre id="3404" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; columns<br /><code class="markup--code markup--pre-code">Index(['state', 'color', 'food', 'age', 'height', 'score'], <br />      dtype='object')</code></pre>
+<pre id="8ccd" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="ccd0668048a2">values</span><br /><span class="markup--quote markup--pre-quote is-other" data-creator-ids="ccd0668048a2"><code class="markup--code markup--pre-code u-paddingRight0 u-marginRight0">array</code></span><code class="markup--code markup--pre-code u-paddingLeft0 u-marginLeft0 u-paddingRight0 u-marginRight0">([['NY', 'blue', '</code><span class="markup--quote markup--pre-quote is-other" data-creator-ids="17b2e6265ed5"><code class="markup--code markup--pre-code u-paddingLeft0 u-marginLeft0 u-paddingRight0 u-marginRight0">Steak</code></span><code class="markup--code markup--pre-code u-paddingLeft0 u-marginLeft0">', 30, 165, 4.6],<br />       ['TX', 'green', 'Lamb', 2, 70, 8.3],<br />       ['FL', 'red', 'Mango', 12, 120, 9.0],<br />       ['AL', 'white', 'Apple', 4, 80, 3.3],<br />       ['AK', 'gray', 'Cheese', 32, 180, 1.8],<br />       ['TX', 'black', 'Melon', 33, 172, 9.5],<br />       ['TX', 'red', 'Beans', 69, 150, 2.2]], dtype=object)</code></pre>
+<h4 id="ddf0" class="graf graf--h3 graf-after--pre">Data types of the components</h4>
+<p id="ec73" class="graf graf--p graf-after--h3">Let&rsquo;s output the type of each component to understand exactly what kind of object they are.</p>
+<pre id="dc03" class="graf graf--pre graf-after--p">&gt;&gt;&gt; type(index)<br /><code class="markup--code markup--pre-code">pandas.core.indexes.base.Index</code></pre>
+<pre id="8366" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; type(columns)<br /><code class="markup--code markup--pre-code">pandas.core.indexes.base.Index</code></pre>
+<pre id="dc45" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="ccd0668048a2">type(values)<br /><code class="markup--code markup--pre-code">numpy.ndarray</code></span></pre>
+<h4 id="2665" class="graf graf--h3 graf-after--pre">Understanding these&nbsp;types</h4>
+<p id="2f50" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="9896d49beda6 84fb69568f18">Interestingly, both the index and the columns are the same type.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="9896d49beda6 84fb69568f18 b4be312feb58">They are both a pandas&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">Index</strong></code>&nbsp;object</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="9896d49beda6 84fb69568f18">.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;T</span>his object is quite powerful in itself, but for now, you can just think of it as&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 a8df52156542">a sequence of&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 a8df52156542 445f97d11598">labels</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 a8df52156542">&nbsp;for either the rows or the columns.</span></p>
+<p id="eaa7" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="205179d0a4a7 9896d49beda6 2d881f9d540f 84fb69568f18 b4e4830dc90d">The values are a NumPy</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="9896d49beda6 2d881f9d540f 84fb69568f18 b4e4830dc90d">&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">ndarray</strong></code></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 84fb69568f18 b4e4830dc90d">, which stands for n-</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 84fb69568f18 b4e4830dc90d 72f94b414b16">dimensional</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 84fb69568f18 b4e4830dc90d">&nbsp;array, and is the&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 84fb69568f18 b4e4830dc90d 205179d0a4a7">primary container of data</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 84fb69568f18 b4e4830dc90d">&nbsp;in the NumPy library.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 84fb69568f18 b4e4830dc90d f7bcdd3ee552 921422686243 7d8db53a2d09">Pandas is built directly on top of NumPy and it's this array&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 84fb69568f18 b4e4830dc90d f7bcdd3ee552 921422686243 7d8db53a2d09 445f97d11598">that</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 84fb69568f18 b4e4830dc90d f7bcdd3ee552 921422686243 7d8db53a2d09">&nbsp;is responsible for the bulk of the workload.</span></p>
+<h3 id="5489" class="graf graf--h3 graf-after--p">Selecting data&nbsp;with just the indexing operator</h3>
+<p id="e23e" class="graf graf--p graf-after--h3">We will begin our journey of selecting subsets by using just the&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="b4be312feb58">indexing operator on a DataFrame.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4be312feb58 3d55901c4303 599f93aa4b02">Its main purpose is to select a single column or multiple columns of data.</span></p>
+<h4 id="01b1" class="graf graf--h3 graf-after--p"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="ccd0668048a2">Selecting a single column as a&nbsp;Series</span></h4>
+<p id="f598" class="graf graf--p graf-after--h3">To select a single column of data,&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02">simply put the name of the column in-between the brackets.</span>&nbsp;Let&rsquo;s select the food column:</p>
+<pre id="d80a" class="graf graf--pre graf-after--p"><code>&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="ccd0668048a2">df['food']</span></code><br /><code class="markup--code markup--pre-code">Jane          Steak<br />Niko           Lamb<br />Aaron         Mango<br />Penelope      Apple<br />Dean         Cheese<br />Christina     Melon<br />Cornelia      Beans<br />Name: food, dtype: object</code></pre>
+<h4 id="8f6b" class="graf graf--h3 graf-after--pre"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">Anatomy of a&nbsp;Series</span></h4>
+<p id="347d" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 1fafae832ec3 bd96579826af b4e4830dc90d 84fb69568f18">Selecting a single column of data returns the other pandas data container, the Series.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18">&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 49cac551075b ccd0668048a2 92fab82e0c7a">A Series is a one-dimensional sequence of labeled data</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 ccd0668048a2 92fab82e0c7a">.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 92fab82e0c7a">&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 92fab82e0c7a e7eed4d58a81 599f93aa4b02 49cac551075b f06435e31e62 59c11c7589ac 7d8db53a2d09">There are two main components of a Series, the&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 92fab82e0c7a e7eed4d58a81 599f93aa4b02 49cac551075b f06435e31e62 59c11c7589ac 7d8db53a2d09 ccd0668048a2"><strong class="markup--strong markup--p-strong">index</strong>&nbsp;and the&nbsp;<strong class="markup--strong markup--p-strong">data</strong></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 92fab82e0c7a 599f93aa4b02 49cac551075b f06435e31e62 59c11c7589ac 7d8db53a2d09 ccd0668048a2">(or&nbsp;<strong class="markup--strong markup--p-strong">values</strong>)</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 92fab82e0c7a 599f93aa4b02 49cac551075b f06435e31e62 59c11c7589ac 7d8db53a2d09">.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 92fab82e0c7a f06435e31e62 59c11c7589ac 7d8db53a2d09">&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 84fb69568f18 92fab82e0c7a f06435e31e62 59c11c7589ac 7d8db53a2d09 1fafae832ec3 a71126094bc5 348634c9ba9f 921422686243">There are NO columns in a Series.</span></p>
+<p id="20c7" class="graf graf--p graf-after--p">The visual display of a Series is just plain text, as opposed to the nicely styled table for DataFrames. The sequence of person names on the left is the index. The sequence of food items on the right is the values.</p>
+<p id="cf25" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac">You will also notice two extra pieces of data on the bottom of the Series.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac 599f93aa4b02">The&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac 599f93aa4b02 ccd0668048a2"><strong class="markup--strong markup--p-strong">name</strong>&nbsp;of the Series becomes the old-column name</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac 599f93aa4b02">.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac">&nbsp;You will also see the data type or&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">dtype</strong></code>&nbsp;of the Series.</span>&nbsp;You can ignore both these items for now.</p>
+<h4 id="f7c1" class="graf graf--h3 graf-after--p"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">Selecting multiple columns with just the indexing&nbsp;operator</span></h4>
+<p id="4f39" class="graf graf--p graf-after--h3">It&rsquo;s possible to select multiple columns with just the indexing operator by&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="49cac551075b">passing it a list of column names</span>. Let&rsquo;s select&nbsp;<code class="markup--code markup--p-code">color</code>,&nbsp;<code class="markup--code markup--p-code">food</code>, and&nbsp;<code class="markup--code markup--p-code">score</code>:</p>
+<pre id="e5f8" class="graf graf--pre graf-after--p">&gt;&gt;<span class="markup--quote markup--pre-quote is-other" data-creator-ids="c1c7a7459f6d">&gt; </span><span class="markup--quote markup--pre-quote is-other" data-creator-ids="c1c7a7459f6d f0a0c60a90cf ccd0668048a2">df[['color'</span><span class="markup--quote markup--pre-quote is-other" data-creator-ids="c1c7a7459f6d f0a0c60a90cf ccd0668048a2 f19daf441a0f">,</span><span class="markup--quote markup--pre-quote is-other" data-creator-ids="c1c7a7459f6d f0a0c60a90cf ccd0668048a2"> 'food', 'score']]</span></pre>
+<figure id="4836" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*ctcUH__YabtZmT5SjzZLvA.png" data-width="256" data-height="270" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="71" height="75"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*ctcUH__YabtZmT5SjzZLvA.png" data-src="https://cdn-images-1.medium.com/max/1600/1*ctcUH__YabtZmT5SjzZLvA.png" /></div>
+</div>
+</figure>
+<h4 id="f1af" class="graf graf--h3 graf-after--figure"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="49cac551075b">Selecting multiple columns returns a DataFrame</span></h4>
+<p id="b2f8" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 59c11c7589ac c8374efcdcc2">Selecting multiple columns returns a DataFrame.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="c8374efcdcc2">&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="c8374efcdcc2 b4e4830dc90d bd96579826af">You can actually&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="c8374efcdcc2 b4e4830dc90d bd96579826af 59c11c7589ac">select a single column as a DataFrame with a one-item list:</span></p>
+<p><code><span class="markup--quote markup--pre-quote is-other" data-creator-ids="ccd0668048a2">df[['food']</span><span class="markup--quote markup--pre-quote is-other" data-creator-ids="ccd0668048a2 f8f2d57dfca3">]</span></code></p>
+<figure id="4bae" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill"><code>&nbsp;</code></div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*rIbPU6Q7wlNwuudMzFfZKA.png" data-width="158" data-height="264" data-scroll="native"><code><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="45" height="75"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*rIbPU6Q7wlNwuudMzFfZKA.png" data-src="https://cdn-images-1.medium.com/max/1600/1*rIbPU6Q7wlNwuudMzFfZKA.png" /></code></div>
+</div>
+</figure>
+<p id="36a2" class="graf graf--p graf-after--figure"><span class="markup--quote markup--p-quote is-other" data-creator-ids="bd96579826af 7d8db53a2d09">Although this resembles the Series from above, it is technically a DataFrame, a different object.</span></p>
+<h4 id="dfc4" class="graf graf--h3 graf-after--p">Column order doesn&rsquo;t&nbsp;matter</h4>
+<p id="7b89" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d">When selecting multiple columns, you can select them in any order that you choose.</span>&nbsp;It doesn&rsquo;t have to be th<span class="markup--quote markup--p-quote is-other" data-creator-ids="1a82310d351a">e</span>&nbsp;same order as the original DataFrame. For instance, let&rsquo;s select&nbsp;<code class="markup--code markup--p-code">height</code>&nbsp;and&nbsp;<code class="markup--code markup--p-code">color</code>.</p>
+<pre id="3fcb" class="graf graf--pre graf-after--p">df[['height', 'color']]</pre>
+<figure id="1517" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*JJ5KTFSgyFEGTWvWsN_GSA.png" data-width="203" data-height="266" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="57" height="75"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*JJ5KTFSgyFEGTWvWsN_GSA.png" data-src="https://cdn-images-1.medium.com/max/1600/1*JJ5KTFSgyFEGTWvWsN_GSA.png" /></div>
+</div>
+</figure>
+<h4 id="205b" class="graf graf--h3 graf-after--figure">Exceptions</h4>
+<p id="3152" class="graf graf--p graf-after--h3">There are a couple of&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac">common exceptions that arise when doing selections with just the indexing&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac bae0539d522f">operator</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac">.</span></p>
+<ul class="postList">
+<li id="2d16" class="graf graf--li graf-after--p">If you&nbsp;<span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac">misspell a word, you will get a&nbsp;<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">KeyError</strong></code></span></li>
+<li id="511a" class="graf graf--li graf-after--li">If you fo<span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac">rgot to use a list to contain multiple columns you will also get a<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">KeyError</strong></code></span></li>
+</ul>
+<pre id="833e" class="graf graf--pre graf-after--li">&gt;&gt;&gt; df['hight']<br /><code class="markup--code markup--pre-code">KeyError: 'hight'</code></pre>
+<pre id="fc36" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; df['color', 'age'] # should be:  df[['color', 'age']]<br /><code class="markup--code markup--pre-code">KeyError: ('color', 'age')</code></pre>
+<h4 id="f884" class="graf graf--h3 graf-after--pre"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac beb27881ee46">Summary of</span><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac beb27881ee46 d3472c1be53f">&nbsp;</span><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac beb27881ee46">just the indexing&nbsp;operator</span></h4>
+<ul class="postList">
+<li id="0ec5" class="graf graf--li graf-after--h3"><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 2d881f9d540f 5350ac63ea53">Its&nbsp;</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 2d881f9d540f 5350ac63ea53 59c11c7589ac">primary purpose is to select columns by the column names</span></li>
+<li id="4f24" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac 599f93aa4b02 4b2977265d68 2d881f9d540f">Select a&nbsp;</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac 599f93aa4b02 4b2977265d68 2d881f9d540f 84fb69568f18">single column as a Series</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 4b2977265d68 2d881f9d540f 84fb69568f18">&nbsp;by passing the column name directly to it:&nbsp;</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 4b2977265d68 2d881f9d540f 84fb69568f18 b4e4830dc90d"><code class="markup--code markup--li-code u-paddingRight0 u-marginRight0"><strong class="markup--strong markup--li-strong">df['</strong></code></span><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 4b2977265d68 2d881f9d540f 84fb69568f18 b4e4830dc90d d088a6818f62"><code class="markup--code markup--li-code u-paddingLeft0 u-marginLeft0 u-paddingRight0 u-marginRight0"><strong class="markup--strong markup--li-strong">col_name</strong></code></span><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 4b2977265d68 2d881f9d540f 84fb69568f18 b4e4830dc90d"><code class="markup--code markup--li-code u-paddingLeft0 u-marginLeft0"><strong class="markup--strong markup--li-strong">']</strong></code></span></li>
+<li id="a2be" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac 2d881f9d540f 4b2977265d68">S</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac 2d881f9d540f 4b2977265d68 599f93aa4b02">elect&nbsp;</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac 2d881f9d540f 4b2977265d68 599f93aa4b02 84fb69568f18">multiple columns as a DataFrame by passing a&nbsp;<strong class="markup--strong markup--li-strong">list</strong>&nbsp;t</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="2d881f9d540f 4b2977265d68 599f93aa4b02 84fb69568f18">o it:</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="2d881f9d540f 4b2977265d68 599f93aa4b02 84fb69568f18 b4e4830dc90d"><code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">df[['col_name1', 'col_name2']]</strong></code></span></li>
+<li id="00f8" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="2d881f9d540f bd96579826af">You actu</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="2d881f9d540f bd96579826af 599f93aa4b02">ally can select rows with it, but this will not be shown here as it is confusing and not used often.</span></li>
+</ul>
+<h3 id="1794" class="graf graf--h3 graf-after--li"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="ccd0668048a2">Selecting data with&nbsp;<code class="markup--code markup--h3-code">.loc</code></span></h3>
+<p id="afb1" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">The&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 59c11c7589ac"><code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>&nbsp;indexer</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18">&nbsp;selects data in a different way than just the indexing operator.</span>&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="36bb569752a2">It can&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="36bb569752a2 ccd0668048a2">select subsets of rows or column</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="ccd0668048a2">s</span>. It can also simultaneously&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="ccd0668048a2">select subsets of rows and columns</span>.&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="b9e9484e4685 7d8db53a2d09 b4be312feb58 49cac551075b 60e12bd52a7f 921422686243 599f93aa4b02">Most</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="7d8db53a2d09 b4be312feb58 49cac551075b 60e12bd52a7f 921422686243 599f93aa4b02">&nbsp;importantly,&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="7d8db53a2d09 b4be312feb58 49cac551075b 60e12bd52a7f 921422686243 599f93aa4b02 ccd0668048a2 5350ac63ea53">it only&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="7d8db53a2d09 b4be312feb58 49cac551075b 60e12bd52a7f 921422686243 599f93aa4b02 ccd0668048a2 5350ac63ea53 59c11c7589ac">selects data by the&nbsp;<strong class="markup--strong markup--p-strong">LABEL</strong>&nbsp;of the rows and columns</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="7d8db53a2d09 b4be312feb58 49cac551075b 60e12bd52a7f 921422686243 599f93aa4b02 5350ac63ea53 59c11c7589ac">.</span></p>
+<h4 id="a176" class="graf graf--h3 graf-after--p"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">Select a single row as a Series with&nbsp;<code class="markup--code markup--h3-code">.loc</code></span></h4>
+<p id="0a00" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d">The&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>&nbsp;indexer returns a single row as a Series when given a single row label</span>. Let's select the row for&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">Niko</strong></code>.</p>
+<pre id="4ca1" class="graf graf--pre graf-after--p">&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="59c11c7589ac">df.loc['Niko']</span><br /><code class="markup--code markup--pre-code">state        TX<br />color     green<br />food       Lamb<br />age           2<br />height       70<br />score       8.3<br />Name: Niko, dtype: object</code></pre>
+<p id="c857" class="graf graf--p graf-after--pre"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">We&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 59c11c7589ac">now have a Series</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac">, where the old column names are now the index labels. The&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">name</strong></code>&nbsp;of the Series has become the old index label,&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">Niko</strong></code>&nbsp;in this case.</span></p>
+<h4 id="8c75" class="graf graf--h3 graf-after--p"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">Select multiple rows as a DataFrame with&nbsp;<code class="markup--code markup--h3-code">.loc</code></span></h4>
+<p id="1ffb" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 2d881f9d540f">To select multiple rows, put all the&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 2d881f9d540f 59c11c7589ac">row labels you want to select in a list</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 2d881f9d540f">&nbsp;and pass that to&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f">&nbsp;Let's select&nbsp;<code class="markup--code markup--p-code">Niko</code>&nbsp;and&nbsp;<code class="markup--code markup--p-code">Penelope</code>.</span></p>
+<pre id="fcd4" class="graf graf--pre graf-after--p">&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="59c11c7589ac">df.loc[['Niko', 'Penelope']]</span></pre>
+<figure id="f50d" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*r-KQCeJEsK2Ba9zdKOrFyw.png" data-width="397" data-height="107" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="20"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*r-KQCeJEsK2Ba9zdKOrFyw.png" data-src="https://cdn-images-1.medium.com/max/1600/1*r-KQCeJEsK2Ba9zdKOrFyw.png" /></div>
+</div>
+</figure>
+<h4 id="8449" class="graf graf--h3 graf-after--figure">Use&nbsp;<span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">slice notation</span>&nbsp;to select a&nbsp;<span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">range of rows with&nbsp;<code class="markup--code markup--h3-code">.loc</code></span></h4>
+<p id="0752" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="84fb69568f18 5fa694756064 2d881f9d540f">It is possible to &lsquo;slice&rsquo; the rows of a DataFrame with&nbsp;<code class="markup--code markup--p-code">.loc</code>&nbsp;by using&nbsp;<strong class="markup--strong markup--p-strong">slice notation</strong></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="5fa694756064 2d881f9d540f">.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="5fa694756064 2d881f9d540f 59c11c7589ac">Slice notation uses a colon to separate&nbsp;<strong class="markup--strong markup--p-strong">start</strong>,&nbsp;<strong class="markup--strong markup--p-strong">stop</strong>&nbsp;and&nbsp;<strong class="markup--strong markup--p-strong">step</strong></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="5fa694756064 2d881f9d540f">&nbsp;values.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f">For instance, we can select all the rows from&nbsp;<code class="markup--code markup--p-code">Niko</code>&nbsp;through&nbsp;<code class="markup--code markup--p-code">Dean</code>&nbsp;like this:</span></p>
+<pre id="3194" class="graf graf--pre graf-after--p"><span class="markup--quote markup--pre-quote is-other" data-creator-ids="2d881f9d540f">&gt;&gt;&gt; </span><span class="markup--quote markup--pre-quote is-other" data-creator-ids="2d881f9d540f f9158ca11a43">df.loc['Niko':'Dean']</span></pre>
+<figure id="a0a6" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*LjZswKJUDlUFHnLRIs-tag.png" data-width="400" data-height="158" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="28"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*LjZswKJUDlUFHnLRIs-tag.png" data-src="https://cdn-images-1.medium.com/max/1600/1*LjZswKJUDlUFHnLRIs-tag.png" /></div>
+</div>
+</figure>
+<h4 id="6c5f" class="graf graf--h3 graf-after--figure"><code class="markup--code markup--h3-code">.loc</code>&nbsp;includes the last value with slice&nbsp;notation</h4>
+<p id="88ad" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="467819a0ea0a 4b2977265d68">Notice that the row labeled with&nbsp;<code class="markup--code markup--p-code">Dean</code>&nbsp;was kept. In other data containers such as Python lists, the last value is excluded.</span></p>
+<h4 id="718b" class="graf graf--h3 graf-after--p">O<span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">ther slices</span></h4>
+<p id="99ec" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="5fa694756064">You can use slice notation similarly to how you use it with lists.</span>&nbsp;Let&rsquo;s slice from the b<span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac">eginning through&nbsp;<code class="markup--code markup--p-code">Aaron</code>:</span></p>
+<pre id="4291" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.loc[:'Aaron']</pre>
+<figure id="9d7a" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*-_lSxZREXisX6Hc7vanI8w.png" data-width="397" data-height="142" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="26"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*-_lSxZREXisX6Hc7vanI8w.png" data-src="https://cdn-images-1.medium.com/max/1600/1*-_lSxZREXisX6Hc7vanI8w.png" /></div>
+</div>
+</figure>
+<p id="7a7e" class="graf graf--p graf-after--figure"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 5fa694756064">Slice from&nbsp;<code class="markup--code markup--p-code">Niko</code>&nbsp;to&nbsp;<code class="markup--code markup--p-code">Christina</code>&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 5fa694756064 7d1f8b9bf921">stepping by 2:</span></p>
+<pre id="da5c" class="graf graf--pre graf-after--p">&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="b4e4830dc90d">df.loc['Niko':'Christi</span><span class="markup--quote markup--pre-quote is-other" data-creator-ids="b4e4830dc90d 921986d1a737">na</span><span class="markup--quote markup--pre-quote is-other" data-creator-ids="b4e4830dc90d">':2]</span></pre>
+<figure id="2061" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*RVd_oBYyVDjY_yDCGQ5fZg.png" data-width="403" data-height="134" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="23"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*RVd_oBYyVDjY_yDCGQ5fZg.png" data-src="https://cdn-images-1.medium.com/max/1600/1*RVd_oBYyVDjY_yDCGQ5fZg.png" /></div>
+</div>
+</figure>
+<p id="0b11" class="graf graf--p graf-after--figure"><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac">Slice from&nbsp;<code class="markup--code markup--p-code">Dean</code>&nbsp;to the end:</span></p>
+<pre id="b1e9" class="graf graf--pre graf-after--p">&gt;&gt;&gt; d<span class="markup--quote markup--pre-quote is-other" data-creator-ids="59c11c7589ac">f.loc['Dean':]</span></pre>
+<figure id="fad7" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*lbGk9hPAvv4CEOCTjGSGSA.png" data-width="400" data-height="128" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="23"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*lbGk9hPAvv4CEOCTjGSGSA.png" data-src="https://cdn-images-1.medium.com/max/1600/1*lbGk9hPAvv4CEOCTjGSGSA.png" /></div>
+</div>
+</figure>
+<h4 id="472b" class="graf graf--h3 graf-after--figure"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac 467819a0ea0a">Selecting rows and columns simultaneously with&nbsp;<code class="markup--code markup--h3-code">.loc</code></span></h4>
+<p id="2a14" class="graf graf--p graf-after--h3">Unlike just the indexing operator,&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="5fa694756064">it is possible to select rows and columns simultaneously with&nbsp;<code class="markup--code markup--p-code">.loc</code></span>. You do it by separating your row and column selections by a&nbsp;<strong class="markup--strong markup--p-strong">comma</strong>. It will look something like this:</p>
+<pre id="b681" class="graf graf--pre graf-after--p"><code class="markup--code markup--pre-code u-paddingRight0 u-marginRight0">&gt;&gt;&gt; </code><span class="markup--quote markup--pre-quote is-other" data-creator-ids="4b2977265d68 59c11c7589ac b4e4830dc90d"><code class="markup--code markup--pre-code u-paddingLeft0 u-marginLeft0">df.loc[row_selection, column_selection]</code></span></pre>
+<h4 id="0c39" class="graf graf--h3 graf-after--pre">Select two&nbsp;<span class="markup--quote markup--h3-quote is-other" data-creator-ids="d3472c1be53f">rows</span>&nbsp;and three&nbsp;<span class="markup--quote markup--h3-quote is-other" data-creator-ids="d3472c1be53f">columns</span></h4>
+<p id="0169" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="467819a0ea0a">For instance, if we wanted to select the rows&nbsp;<code class="markup--code markup--p-code">Dean</code>&nbsp;and&nbsp;<code class="markup--code markup--p-code">Cornelia</code>&nbsp;along with the columns&nbsp;<code class="markup--code markup--p-code">age</code>,&nbsp;<code class="markup--code markup--p-code">state</code>&nbsp;and&nbsp;<code class="markup--code markup--p-code">score</code>&nbsp;we would do this:</span></p>
+<pre id="7326" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.loc[['Dean', 'Cornelia'], ['age', 'state', 'score']]</pre>
+<figure id="9cff" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<img class="graf-image" src="https://cdn-images-1.medium.com/max/1600/1*03DYVgodNXVjcx_V9Hj6PQ.png" data-image-id="1*03DYVgodNXVjcx_V9Hj6PQ.png" data-width="226" data-height="97" /></div>
+</figure>
+<h4 id="b8d6" class="graf graf--h3 graf-after--figure">Use any combination of selections for either row or columns for&nbsp;<code class="markup--code markup--h3-code">.loc</code></h4>
+<p id="952c" class="graf graf--p graf-after--h3">Row or column selections can be any of the following as we have already seen:</p>
+<ul class="postList">
+<li id="7ed7" class="graf graf--li graf-after--p"><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac">A single label</span></li>
+<li id="3f7f" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac">A list of labels</span></li>
+<li id="8fef" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac">A slice with labels</span></li>
+</ul>
+<p id="a767" class="graf graf--p graf-after--li">We can use any of these three for either row or column selections with&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>. Let's see some examples.</p>
+<p id="5ca4" class="graf graf--p graf-after--p">Let&rsquo;s select two rows and a single column:</p>
+<pre id="cde3" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.loc[['Dean', 'Aaron'], 'food']<br /><code class="markup--code markup--pre-code">Dean     Cheese<br />Aaron     Mango<br />Name: food, dtype: object</code></pre>
+<p id="0a77" class="graf graf--p graf-after--pre">Select a slice of rows and a list of columns:</p>
+<pre id="c473" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.loc['Jane':'Penelope', ['state', 'color']]</pre>
+<figure id="7a75" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*NA-MxX9soaLLhnq34cp7Rg.png" data-width="190" data-height="180" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="70"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*NA-MxX9soaLLhnq34cp7Rg.png" data-src="https://cdn-images-1.medium.com/max/1600/1*NA-MxX9soaLLhnq34cp7Rg.png" /></div>
+</div>
+</figure>
+<p id="afab" class="graf graf--p graf-after--figure"><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 4b2977265d68">Select a single row and a single column. This returns a scalar&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 4b2977265d68 72f94b414b16">value</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 4b2977265d68">.</span></p>
+<pre id="c768" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.loc['Jane', 'age']<br /><code class="markup--code markup--pre-code">30</code></pre>
+<p id="126e" class="graf graf--p graf-after--pre">Select a slice of rows and columns</p>
+<pre id="6b01" class="graf graf--pre graf-after--p"><span class="markup--quote markup--pre-quote is-other" data-creator-ids="92fab82e0c7a">&gt;&gt;&gt; df.loc[:'Dean', 'height':]</span></pre>
+<figure id="fa65" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*hguNxXIZc878r11XzzAW_Q.png" data-width="208" data-height="199" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="71"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*hguNxXIZc878r11XzzAW_Q.png" data-src="https://cdn-images-1.medium.com/max/1600/1*hguNxXIZc878r11XzzAW_Q.png" /></div>
+</div>
+</figure>
+<h4 id="ea5d" class="graf graf--h3 graf-after--figure">Selecting all of the rows and some&nbsp;columns</h4>
+<p id="ba7a" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">It is possible to select all of the rows by using a single colon. You can then select columns as normal</span>:</p>
+<pre id="78f7" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.loc[:, ['food', 'color']]</pre>
+<figure id="2a1f" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*oRPKw_82d0_PFNB5Cho1zw.png" data-width="204" data-height="257" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="60" height="75"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*oRPKw_82d0_PFNB5Cho1zw.png" data-src="https://cdn-images-1.medium.com/max/1600/1*oRPKw_82d0_PFNB5Cho1zw.png" /></div>
+</div>
+</figure>
+<p id="a28c" class="graf graf--p graf-after--figure">You can also use this notation to&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="5fa694756064">select all of the columns</span>:</p>
+<pre id="283e" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.loc[['Penelope','Cornelia'], :]</pre>
+<figure id="5a95" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*LfdbzoBocHPGMXT5ZkpKRA.png" data-width="404" data-height="109" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="20"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*LfdbzoBocHPGMXT5ZkpKRA.png" data-src="https://cdn-images-1.medium.com/max/1600/1*LfdbzoBocHPGMXT5ZkpKRA.png" /></div>
+</div>
+</figure>
+<p id="3eb1" class="graf graf--p graf-after--figure">But,&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="5fa694756064">it isn&rsquo;t necessary as we have seen, so you can leave out that last colon:</span></p>
+<pre id="24c6" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.loc[['Penelope','Cornelia']]</pre>
+<figure id="d80d" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*LfdbzoBocHPGMXT5ZkpKRA.png" data-width="404" data-height="109" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="20"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*LfdbzoBocHPGMXT5ZkpKRA.png" data-src="https://cdn-images-1.medium.com/max/1600/1*LfdbzoBocHPGMXT5ZkpKRA.png" /></div>
+</div>
+</figure>
+<h4 id="281b" class="graf graf--h3 graf-after--figure">Assign row and column selections to variables</h4>
+<p id="5371" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac">I</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac b4e4830dc90d">t might be easier to assign row and column selections to variables before you use&nbsp;<code class="markup--code markup--p-code">.loc</code>. This is useful if you are selecting many rows or columns:</span></p>
+<pre id="1860" class="graf graf--pre graf-after--p"><span class="markup--quote markup--pre-quote is-other" data-creator-ids="b4e4830dc90d">&gt;&gt;&gt; </span><span class="markup--quote markup--pre-quote is-other" data-creator-ids="b4e4830dc90d 59c11c7589ac">rows = ['Jane', 'Niko', 'Dean', 'Penelope', 'Christina']<br />&gt;&gt;&gt; cols = ['state', 'age', 'height', 'score']<br />&gt;&gt;&gt; df.loc[rows, cols]</span></pre>
+<figure id="b539" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*WG_BZ7r77RZtRIiSxZVzqQ.png" data-width="292" data-height="202" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="51"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*WG_BZ7r77RZtRIiSxZVzqQ.png" data-src="https://cdn-images-1.medium.com/max/1600/1*WG_BZ7r77RZtRIiSxZVzqQ.png" /></div>
+</div>
+</figure>
+<h4 id="3f3b" class="graf graf--h3 graf-after--figure"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="2d881f9d540f 59c11c7589ac">Summary of&nbsp;<code class="markup--code markup--h3-code">.loc</code></span></h4>
+<ul class="postList">
+<li id="2329" class="graf graf--li graf-after--h3"><span class="markup--quote markup--li-quote is-other" data-creator-ids="2d881f9d540f 5350ac63ea53 599f93aa4b02 59c11c7589ac b4e4830dc90d 4b2977265d68">Only uses labels</span></li>
+<li id="81a1" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 59c11c7589ac 2d881f9d540f 4b2977265d68 b4e4830dc90d">Can select rows and columns simultaneously</span></li>
+<li id="dd34" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 b4e4830dc90d 4b2977265d68 2d881f9d540f">S</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 b4e4830dc90d 4b2977265d68 2d881f9d540f 59c11c7589ac">election can be a single label, a list of labels&nbsp;</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 b4e4830dc90d 4b2977265d68 2d881f9d540f 59c11c7589ac 72f94b414b16">or</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="599f93aa4b02 b4e4830dc90d 4b2977265d68 2d881f9d540f 59c11c7589ac">&nbsp;a slice of labels</span></li>
+<li id="6927" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="4b2977265d68 b4e4830dc90d 2d881f9d540f 599f93aa4b02 59c11c7589ac">Put a comma between row and column selections</span></li>
+</ul>
+<h3 id="1ceb" class="graf graf--h3 graf-after--li"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">Selecting subsets with&nbsp;<code class="markup--code markup--h3-code">.iloc</code></span></h3>
+<p id="1830" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="ccd0668048a2 4b2977265d68 5350ac63ea53 467819a0ea0a">The&nbsp;<code class="markup--code markup--p-code">.iloc</code>&nbsp;indexer is very&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="ccd0668048a2 4b2977265d68 5350ac63ea53 467819a0ea0a 59c11c7589ac">similar to&nbsp;<code class="markup--code markup--p-code">.loc</code>&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="ccd0668048a2 4b2977265d68 5350ac63ea53 467819a0ea0a 59c11c7589ac 599f93aa4b02">but only uses integer locations</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="ccd0668048a2 4b2977265d68 5350ac63ea53 467819a0ea0a 59c11c7589ac">&nbsp;to make its selections</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="ccd0668048a2 4b2977265d68 5350ac63ea53 467819a0ea0a">. The word&nbsp;<code class="markup--code markup--p-code">.iloc</code>&nbsp;itself stands for integer location so that should help with remembering what it does.</span></p>
+<h4 id="6861" class="graf graf--h3 graf-after--p">Selecting a single row with&nbsp;<code class="markup--code markup--h3-code">.iloc</code></h4>
+<p id="7536" class="graf graf--p graf-after--h3">By passing a single integer to&nbsp;<code class="markup--code markup--p-code">.iloc</code>, it will select one row as a Series:</p>
+<pre id="1687" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[3]<br /><code class="markup--code markup--pre-code">state        AL<br />color     white<br />food      Apple<br />age           4<br />height       80<br />score       3.3<br />Name: Penelope, dtype: object</code></pre>
+<h4 id="3c23" class="graf graf--h3 graf-after--pre">Selecting multiple rows with&nbsp;<code class="markup--code markup--h3-code">.iloc</code></h4>
+<p id="bc35" class="graf graf--p graf-after--h3">Use a list of integers to select multiple rows:</p>
+<pre id="9f7d" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[[5, 2, 4]]       # remember, don't do df.iloc[5, 2, 4]</pre>
+<figure id="566a" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*WpJZ25LMTESDrozrs7Y5qA.png" data-width="402" data-height="127" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="22"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*WpJZ25LMTESDrozrs7Y5qA.png" data-src="https://cdn-images-1.medium.com/max/1600/1*WpJZ25LMTESDrozrs7Y5qA.png" /></div>
+</div>
+</figure>
+<h4 id="c375" class="graf graf--h3 graf-after--figure">Use slice notation to select a range of rows with&nbsp;<code class="markup--code markup--h3-code">.iloc</code></h4>
+<p id="e0e5" class="graf graf--p graf-after--h3">Slice notation works just like a list in this instance and&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02">is exclusive of the last element</span></p>
+<pre id="ec38" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[3:5]</pre>
+<figure id="20bd" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<img class="graf-image" src="https://cdn-images-1.medium.com/max/1600/1*RgXHsZiNzAd8Z_0BK7Olqg.png" data-image-id="1*RgXHsZiNzAd8Z_0BK7Olqg.png" data-width="410" data-height="98" /></div>
+</figure>
+<p id="35d4" class="graf graf--p graf-after--figure">Select 3rd position until end:</p>
+<pre id="46c3" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[3:]</pre>
+<figure id="e920" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*vDDHDznwNeGHYrM18V3ABA.png" data-width="398" data-height="167" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="31"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*vDDHDznwNeGHYrM18V3ABA.png" data-src="https://cdn-images-1.medium.com/max/1600/1*vDDHDznwNeGHYrM18V3ABA.png" /></div>
+</div>
+</figure>
+<p id="0f01" class="graf graf--p graf-after--figure"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">Select 3rd position to end by 2:</span></p>
+<pre id="d0dc" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[3::2]</pre>
+<figure id="9fc1" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<img class="graf-image" src="https://cdn-images-1.medium.com/max/1600/1*_MGwbnVitEnnH_RoOAxLxw.png" data-image-id="1*_MGwbnVitEnnH_RoOAxLxw.png" data-width="396" data-height="98" /></div>
+</figure>
+<h4 id="8023" class="graf graf--h3 graf-after--figure">Selecting rows and columns simultaneously with&nbsp;<code class="markup--code markup--h3-code">.iloc</code></h4>
+<p id="0485" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="5fa694756064">Just like with&nbsp;<code class="markup--code markup--p-code">.iloc</code>&nbsp;any combination of a single integer, lists of integers or slices can be used to select rows and columns simultaneously.</span>&nbsp;Just remember to separate the selections with a&nbsp;<strong class="markup--strong markup--p-strong">comma</strong>.</p>
+<p id="e2d4" class="graf graf--p graf-after--p">Select two rows and two columns:</p>
+<pre id="d823" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[[2,3], [0, 4]]</pre>
+<figure id="08ba" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*xdBEnpt4APUgtFnmo9uoAw.png" data-width="198" data-height="110" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="41"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*xdBEnpt4APUgtFnmo9uoAw.png" data-src="https://cdn-images-1.medium.com/max/1600/1*xdBEnpt4APUgtFnmo9uoAw.png" /></div>
+</div>
+</figure>
+<p id="77a2" class="graf graf--p graf-after--figure">Select a slice of the rows and two columns:</p>
+<pre id="aedc" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[3:6, [1, 4]]</pre>
+<figure id="54b2" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*4Ff8OMPaU6u1GEG88CrBEQ.png" data-width="202" data-height="130" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="47"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*4Ff8OMPaU6u1GEG88CrBEQ.png" data-src="https://cdn-images-1.medium.com/max/1600/1*4Ff8OMPaU6u1GEG88CrBEQ.png" /></div>
+</div>
+</figure>
+<p id="72dd" class="graf graf--p graf-after--figure">Select slices for both</p>
+<pre id="ccd4" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[2:5, 2:5]</pre>
+<figure id="da2a" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*jFvBH1eyLSs09-SQIWa2Eg.png" data-width="262" data-height="137" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="38"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*jFvBH1eyLSs09-SQIWa2Eg.png" data-src="https://cdn-images-1.medium.com/max/1600/1*jFvBH1eyLSs09-SQIWa2Eg.png" /></div>
+</div>
+</figure>
+<p id="2434" class="graf graf--p graf-after--figure">Select a single row and column</p>
+<pre id="5e7f" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[0, 2]<br /><code class="markup--code markup--pre-code">'Steak'</code></pre>
+<p id="3642" class="graf graf--p graf-after--pre"><span class="markup--quote markup--p-quote is-other" data-creator-ids="6763710c9002">Select all the rows and a single column</span></p>
+<pre id="cb0f" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.iloc[:, 5]<br /><code class="markup--code markup--pre-code">Jane         4.6<br />Niko         8.3<br />Aaron        9.0<br />Penelope     3.3<br />Dean         1.8<br />Christina    9.5<br />Cornelia     2.2<br />Name: score, dtype: float64</code></pre>
+<h4 id="181e" class="graf graf--h3 graf-after--pre">Deprecation of&nbsp;<code class="markup--code markup--h3-code">.ix</code></h4>
+<p id="90b3" class="graf graf--p graf-after--h3">Early in the development of pandas, there existed another indexer,&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">ix</strong></code>. This indexer was capable of selecting both by label and by integer location. While it was versatile, it caused lots of confusion because it's not explicit. Sometimes integers can also be labels for rows or columns. Thus there were instances where it was ambiguous.</p>
+<p id="e884" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 a8df52156542">You can still call&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.ix</strong></code>, but it has been deprecated, so please&nbsp;<strong class="markup--strong markup--p-strong">never use it</strong>.</span></p>
+<h4 id="f028" class="graf graf--h3 graf-after--p">Selecting subsets of&nbsp;Series</h4>
+<p id="d53a" class="graf graf--p graf-after--h3">We can also, of course, do subset selection with a Series. Earlier I recommended using just the indexing operator for column selection on a DataFrame.&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="59c11c7589ac 4b2977265d68">Since Series do not have columns, I suggest using only&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>and&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc</strong></code></span>.&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02">You can use just the indexing operator, but its ambiguous as it can take both labels and integer</span>s. I will come back to this at the end of the tutorial.</p>
+<p id="3744" class="graf graf--p graf-after--p">Typically, you will create a Series by selecting a single column from a DataFrame. Let&rsquo;s select the&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">food</strong></code>&nbsp;column:</p>
+<pre id="19e1" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food = df['food']<br />&gt;&gt;&gt; food<br /><code class="markup--code markup--pre-code">Jane          Steak<br />Niko           Lamb<br />Aaron         Mango<br />Penelope      Apple<br />Dean         Cheese<br />Christina     Melon<br />Cornelia      Beans<br />Name: food, dtype: object</code></pre>
+<h4 id="9390" class="graf graf--h3 graf-after--pre">Series selection with&nbsp;<code class="markup--code markup--h3-code">.loc</code></h4>
+<p id="8486" class="graf graf--p graf-after--h3">Series selection with&nbsp;<code class="markup--code markup--p-code">.loc</code>&nbsp;is quite simple, since we are only dealing with a single dimension. You can again use a single row label, a list of row labels or a slice of row labels to make your selection. Let's see several examples.</p>
+<p id="bd9c" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d">Let&rsquo;s select a single value:</span></p>
+<pre id="b60c" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food.loc['Aaron']<br /><code class="markup--code markup--pre-code">'Mango'</code></pre>
+<p id="f5c1" class="graf graf--p graf-after--pre">Select three different values. This returns a Series:</p>
+<pre id="f37f" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food.loc[['Dean', 'Niko', 'Cornelia']]<br /><code class="markup--code markup--pre-code">Dean        Cheese<br />Niko          Lamb<br />Cornelia     Beans<br />Name: food, dtype: object</code></pre>
+<p id="f610" class="graf graf--p graf-after--pre">Slice from&nbsp;<code class="markup--code markup--p-code">Niko</code>&nbsp;to&nbsp;<code class="markup--code markup--p-code">Christina</code>&nbsp;- is&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02">inclusive of the last index</span></p>
+<pre id="90c2" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food.loc['Niko':'Christina']<br /><code class="markup--code markup--pre-code">Niko           Lamb<br />Aaron         Mango<br />Penelope      Apple<br />Dean         Cheese<br />Christina     Melon<br />Name: food, dtype: object</code></pre>
+<p id="5f88" class="graf graf--p graf-after--pre">Slice from&nbsp;<code class="markup--code markup--p-code">Penelope</code>&nbsp;to the end:</p>
+<pre id="d915" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food.loc['Penelope':]<br /><code class="markup--code markup--pre-code">Penelope      Apple<br />Dean         Cheese<br />Christina     Melon<br />Cornelia      Beans<br />Name: food, dtype: object</code></pre>
+<p id="ec01" class="graf graf--p graf-after--pre"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d">Select a single value in a list which returns a Series</span></p>
+<pre id="d9ba" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food.loc[['Aaron']]<br /><code class="markup--code markup--pre-code">Aaron    Mango<br />Name: food, dtype: object</code></pre>
+<h4 id="37c5" class="graf graf--h3 graf-after--pre">Series selection with&nbsp;<code class="markup--code markup--h3-code">.iloc</code></h4>
+<p id="d507" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">Series subset selection with&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc</strong></code>&nbsp;happens similarly to&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>&nbsp;except it uses integer location.</span>&nbsp;You can use a single integer, a list of integers or a slice of integers. Let's see some examples.</p>
+<p id="3257" class="graf graf--p graf-after--p">Select a single value:</p>
+<pre id="a60d" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food.iloc[0]<br /><code class="markup--code markup--pre-code">'Steak'</code></pre>
+<p id="1fb5" class="graf graf--p graf-after--pre">Use a list of integers to select multiple values:</p>
+<pre id="fb02" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food.iloc[[4, 1, 3]]<br /><code class="markup--code markup--pre-code">Dean        Cheese<br />Niko          Lamb<br />Penelope     Apple<br />Name: food, dtype: object</code></pre>
+<p id="2367" class="graf graf--p graf-after--pre">Use a slice &mdash; is exclusive of the last integer</p>
+<pre id="c779" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food.iloc[4:6]<br /><code class="markup--code markup--pre-code">Dean         Cheese<br />Christina     Melon<br />Name: food, dtype: object</code></pre>
+<h4 id="d4bb" class="graf graf--h3 graf-after--pre">Comparison to Python lists and dictionaries</h4>
+<p id="8f6c" class="graf graf--p graf-after--h3">It may be helpful to compare pandas ability to make selections by label and integer location to that of Python lists and dictionaries.</p>
+<p id="1568" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 4b2977265d68">Python lists allow for the selection of data only through integer location. You can use a single integer or slice notation to make the selection but NOT a list of integers.</span></p>
+<p id="bacb" class="graf graf--p graf-after--p">Let&rsquo;s see examples of subset selection of lists using integers:</p>
+<pre id="72b5" class="graf graf--pre graf-after--p">&gt;&gt;&gt; some_list = ['a', 'two', 10, 4, 0, 'asdf', 'mgmt', 434, 99]</pre>
+<pre id="45f1" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; some_list[5]<br /><code class="markup--code markup--pre-code">'asdf'</code></pre>
+<pre id="7093" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; some_list[-1]<br /><code class="markup--code markup--pre-code">99</code></pre>
+<pre id="eca9" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; some_list[:4]<br /><code class="markup--code markup--pre-code">['a', 'two', 10, 4]</code></pre>
+<pre id="3f4a" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; some_list[3:]<br /><code class="markup--code markup--pre-code">[4, 0, 'asdf', 'mgmt', 434, 99]</code></pre>
+<pre id="5b9b" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; some_list[2:6:3]<br /><code class="markup--code markup--pre-code">[10, 'asdf']</code></pre>
+<h4 id="814d" class="graf graf--h3 graf-after--pre">Selection by label with Python dictionaries</h4>
+<p id="fe35" class="graf graf--p graf-after--h3">All values in each dictionary are labeled by a&nbsp;<strong class="markup--strong markup--p-strong">key</strong>. We use this key to make single selections.&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 599f93aa4b02">Dictionaries only allow selection with a single label. Slices and lists of labels are not allowed.</span></p>
+<pre id="5160" class="graf graf--pre graf-after--p">&gt;&gt;&gt; d = {'a':1, 'b':2, 't':20, 'z':26, 'A':27}<br />&gt;&gt;&gt; d['a']<br /><code class="markup--code markup--pre-code">1</code></pre>
+<pre id="28f9" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; d['A']<br /><code class="markup--code markup--pre-code">27</code></pre>
+<h4 id="aba4" class="graf graf--h3 graf-after--pre"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="5350ac63ea53">Pandas has the power of lists and dictionaries</span></h4>
+<p id="43a2" class="graf graf--p graf-after--h3">DataFrames and Series are able to make selections with integers like a list and with labels like a dictionary.</p>
+<h3 id="454c" class="graf graf--h3 graf-after--p">Extra Topics</h3>
+<p id="94dd" class="graf graf--p graf-after--h3">There are a few more items that are important and belong in this tutorial and will be mentioned now.</p>
+<h4 id="c35e" class="graf graf--h3 graf-after--p">Using just the indexing operator to select rows from a DataFrame &mdash; Confusing!</h4>
+<p id="3da8" class="graf graf--p graf-after--h3">Above, I used just the indexing operator to select a column or columns from a DataFrame. But,&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02">it can also be used to select rows using a&nbsp;<strong class="markup--strong markup--p-strong">slice</strong>.</span>&nbsp;This behavior is very confusing in my opinion. The entire operation changes completely when a slice is passed.</p>
+<p id="80ca" class="graf graf--p graf-after--p">Let&rsquo;s use an integer slice as our first example:</p>
+<pre id="4518" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df[3:6]</pre>
+<figure id="c370" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*VLlVzvrycrlMeQw_OPnlmg.png" data-width="408" data-height="130" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="23"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*VLlVzvrycrlMeQw_OPnlmg.png" data-src="https://cdn-images-1.medium.com/max/1600/1*VLlVzvrycrlMeQw_OPnlmg.png" /></div>
+</div>
+</figure>
+<p id="8a4d" class="graf graf--p graf-after--figure">To add to this confusion,&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02">you can slice by labels as well.</span></p>
+<pre id="a206" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df['Aaron':'Christina']</pre>
+<figure id="62dd" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*ckgKLl2gSA39EB2I1GH2hw.png" data-width="398" data-height="162" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="30"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*ckgKLl2gSA39EB2I1GH2hw.png" data-src="https://cdn-images-1.medium.com/max/1600/1*ckgKLl2gSA39EB2I1GH2hw.png" /></div>
+</div>
+</figure>
+<h4 id="3a9a" class="graf graf--h3 graf-after--figure">I recommend not doing&nbsp;this!</h4>
+<p id="f4c8" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d">This feature is not deprecated and completely up to you whether you wish to use it. But,&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 7d8db53a2d09">I highly prefer not to select rows in this manner as can be ambiguous, especially if you have integers in your index.</span></p>
+<p id="f192" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 a8df52156542 b4e4830dc90d">Using&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc</strong></code>&nbsp;and&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>&nbsp;is explicit and clearly tells the person reading the code what is going to happen.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d">&nbsp;Let's rewrite the above using&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc</strong></code>&nbsp;and&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>.</span></p>
+<pre id="3b73" class="graf graf--pre graf-after--p">&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="4b2977265d68">df.iloc[3:6]      # More explicit that df[3:6]</span></pre>
+<figure id="390e" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*VLlVzvrycrlMeQw_OPnlmg.png" data-width="408" data-height="130" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="23"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*VLlVzvrycrlMeQw_OPnlmg.png" data-src="https://cdn-images-1.medium.com/max/1600/1*VLlVzvrycrlMeQw_OPnlmg.png" /></div>
+</div>
+</figure>
+<pre id="949b" class="graf graf--pre graf-after--figure">&gt;&gt;&gt; <span class="markup--quote markup--pre-quote is-other" data-creator-ids="4b2977265d68">df.loc['Aaron':'Christina']</span> </pre>
+<figure id="7a45" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*ckgKLl2gSA39EB2I1GH2hw.png" data-width="398" data-height="162" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="30"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*ckgKLl2gSA39EB2I1GH2hw.png" data-src="https://cdn-images-1.medium.com/max/1600/1*ckgKLl2gSA39EB2I1GH2hw.png" /></div>
+</div>
+</figure>
+<h4 id="e5f1" class="graf graf--h3 graf-after--figure"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="599f93aa4b02 4b2977265d68">Cannot simultaneously select rows and columns with&nbsp;<code class="markup--code markup--h3-code">[]</code></span></h4>
+<p id="95a3" class="graf graf--p graf-after--h3">An exception will be raised if you try and select rows and columns simultaneously with just the indexing operator.&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">You must use&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>&nbsp;or&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc&nbsp;</strong></code>to do so.</span></p>
+<pre id="b303" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df[3:6, 'Aaron':'Christina']<br /><code class="markup--code markup--pre-code">TypeError: unhashable type: 'slice'</code></pre>
+<h4 id="44b1" class="graf graf--h3 graf-after--pre">Using just the indexing operator to select rows from a Series &mdash; Confusing!</h4>
+<p id="d179" class="graf graf--p graf-after--h3">You can also use just the indexing operator with a Series. Again, this is confusing because it can accept integers or labels. Let&rsquo;s see some examples</p>
+<pre id="39f3" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food<br /><code class="markup--code markup--pre-code">Jane          Steak<br />Niko           Lamb<br />Aaron         Mango<br />Penelope      Apple<br />Dean         Cheese<br />Christina     Melon<br />Cornelia      Beans<br />Name: food, dtype: object</code></pre>
+<pre id="ae93" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; food[2:4]<br /><code class="markup--code markup--pre-code">Aaron       Mango<br />Penelope    Apple<br />Name: food, dtype: object</code></pre>
+<pre id="8cd1" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; food['Niko':'Dean']<br /><code class="markup--code markup--pre-code">Niko          Lamb<br />Aaron        Mango<br />Penelope     Apple<br />Dean        Cheese<br />Name: food, dtype: object</code></pre>
+<p id="d64a" class="graf graf--p graf-after--pre">Since Series don&rsquo;t have columns you can use a single label and list of labels to make selections as well</p>
+<pre id="74c8" class="graf graf--pre graf-after--p">&gt;&gt;&gt; food['Dean']<br /><code class="markup--code markup--pre-code">'Cheese'</code></pre>
+<pre id="0573" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; food[['Dean', 'Christina', 'Aaron']]<br /><code class="markup--code markup--pre-code">Dean         Cheese<br />Christina     Melon<br />Aaron         Mango<br />Name: food, dtype: object</code></pre>
+<p id="14f5" class="graf graf--p graf-after--pre"><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02">Again, I recommend against doing this and always use&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc</strong></code>&nbsp;or&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code></span></p>
+<h4 id="e48e" class="graf graf--h3 graf-after--p">Importing data without choosing an index&nbsp;column</h4>
+<p id="bfd9" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="a8df52156542 4b2977265d68">We imported data by choosing the first column to be the index with the&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">index_col</strong></code>&nbsp;parameter of the&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">read_csv</strong></code>&nbsp;function</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">.</span>&nbsp;This is not typically how most DataFrames are read into pandas.</p>
+<p id="18d3" class="graf graf--p graf-after--p"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">Usually, all the columns in the csv file become DataFrame columns. Pandas will use the integers 0 to n-1 as the labels.</span>&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="445f97d11598">See</span>&nbsp;the example data below with a slightly different dataset:</p>
+<pre id="e037" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df2 = pd.read_csv('data/sample_data2.csv')<br />&gt;&gt;&gt; df2</pre>
+<figure id="5756" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*WIHN9IKCZ2b9AJMVybtkqg.png" data-width="425" data-height="266" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="46"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*WIHN9IKCZ2b9AJMVybtkqg.png" data-src="https://cdn-images-1.medium.com/max/1600/1*WIHN9IKCZ2b9AJMVybtkqg.png" /></div>
+</div>
+</figure>
+<h4 id="f924" class="graf graf--h3 graf-after--figure">The default&nbsp;<code class="markup--code markup--h3-code">RangeIndex</code></h4>
+<p id="aeec" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 2d881f9d540f">If you don&rsquo;t specify a column to be the index when first reading in the data, pandas will use the integers 0 to n-1 as the index. This technically creates a&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">RangeIndex</strong></code>&nbsp;object.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f">&nbsp;Let's take a look at it.</span></p>
+<pre id="df69" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df2.index<br /><code class="markup--code markup--pre-code">RangeIndex(start=0, stop=7, step=1)</code></pre>
+<p id="f2a5" class="graf graf--p graf-after--pre"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">This object is similar to Python&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">range</strong></code>&nbsp;objects.</span>&nbsp;Let's create one:</p>
+<pre id="fe2c" class="graf graf--pre graf-after--p">&gt;&gt;&gt; range(7)<br /><code class="markup--code markup--pre-code">range(0, 7)</code></pre>
+<p id="1da8" class="graf graf--p graf-after--pre">Converting both of these objects to a list produces the exact same thing:</p>
+<pre id="a488" class="graf graf--pre graf-after--p">&gt;&gt;&gt; list(df2.index)<br /><code class="markup--code markup--pre-code">[0, 1, 2, 3, 4, 5, 6]</code></pre>
+<pre id="4302" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; list(range(7))<br /><code class="markup--code markup--pre-code">[0, 1, 2, 3, 4, 5, 6]</code></pre>
+<p id="458d" class="graf graf--p graf-after--pre">For now, it&rsquo;s not at all important that you have a&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">RangeIndex</strong></code>. Selections from it happen just the same with&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>&nbsp;and&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc</strong></code>. Let's look at some examples.</p>
+<pre id="2ab4" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df2.loc[[2, 4, 5], ['food', 'color']]</pre>
+<figure id="2971" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*CM8GwO6O4DjNlNB43AoKZQ.png" data-width="143" data-height="133" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="68"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*CM8GwO6O4DjNlNB43AoKZQ.png" data-src="https://cdn-images-1.medium.com/max/1600/1*CM8GwO6O4DjNlNB43AoKZQ.png" /></div>
+</div>
+</figure>
+<pre id="39ad" class="graf graf--pre graf-after--figure">&gt;&gt;&gt; df2.iloc[[2, 4, 5], [3,2]]</pre>
+<figure id="4f1a" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*UaTEMv6chUaFv5mXIunb0g.png" data-width="150" data-height="139" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="68"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*UaTEMv6chUaFv5mXIunb0g.png" data-src="https://cdn-images-1.medium.com/max/1600/1*UaTEMv6chUaFv5mXIunb0g.png" /></div>
+</div>
+</figure>
+<p id="1b4c" class="graf graf--p graf-after--figure"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4a400865557d b98186378179 b4e4830dc90d 4b2977265d68">There is a subtle difference when using a slice.&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.iloc</strong></code>&nbsp;excludes the last value, while&nbsp;<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">.loc</strong></code>&nbsp;includes it</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b98186378179 b4e4830dc90d 4b2977265d68">:</span></p>
+<pre id="d219" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df2.iloc[:3]</pre>
+<figure id="6798" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*pTp1BxEPoLERdhE6X-FVdg.png" data-width="408" data-height="131" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="23"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*pTp1BxEPoLERdhE6X-FVdg.png" data-src="https://cdn-images-1.medium.com/max/1600/1*pTp1BxEPoLERdhE6X-FVdg.png" /></div>
+</div>
+</figure>
+<pre id="f143" class="graf graf--pre graf-after--figure">&gt;&gt;&gt; df2.loc[:3]</pre>
+<figure id="35f4" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*jEJWfGHzkyE24Wv7oy64Cw.png" data-width="420" data-height="166" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="28"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*jEJWfGHzkyE24Wv7oy64Cw.png" data-src="https://cdn-images-1.medium.com/max/1600/1*jEJWfGHzkyE24Wv7oy64Cw.png" /></div>
+</div>
+</figure>
+<h4 id="9905" class="graf graf--h3 graf-after--figure"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="59c11c7589ac">Setting an index from a column after reading in&nbsp;data</span></h4>
+<p id="215c" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 4b2977265d68">It is common to see pandas code that&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 4b2977265d68 599f93aa4b02">reads in a DataFrame with a RangeIndex and then sets the index to be one of the columns</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 4b2977265d68">. This is typically done with the&nbsp;<code class="markup--code markup--p-code u-paddingRight0 u-marginRight0"><strong class="markup--strong markup--p-strong">s</strong></code></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f 4b2977265d68 59c11c7589ac"><code class="markup--code markup--p-code u-paddingLeft0 u-marginLeft0"><strong class="markup--strong markup--p-strong">et_index</strong></code>&nbsp;method:</span></p>
+<pre id="17a5" class="graf graf--pre graf-after--p">&gt;&gt;&gt; d<span class="markup--quote markup--pre-quote is-other" data-creator-ids="59c11c7589ac">f2_idx = df2.set_index('Names')</span><br />&gt;&gt;&gt; df2_idx</pre>
+<figure id="826e" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*3x34RRUQyGKE9lkI-Za6yw.png" data-width="400" data-height="295" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="55"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*3x34RRUQyGKE9lkI-Za6yw.png" data-src="https://cdn-images-1.medium.com/max/1600/1*3x34RRUQyGKE9lkI-Za6yw.png" /></div>
+</div>
+</figure>
+<h4 id="6912" class="graf graf--h3 graf-after--figure">The index has a&nbsp;name</h4>
+<p id="c490" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">Notice that this DataFrame does not look exactly like our first one from the very top of this tutorial.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 4c63a86d1fd1">Directly</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">&nbsp;above the index is the bold-faced word<code class="markup--code markup--p-code"><strong class="markup--strong markup--p-strong">Names</strong></code>.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 599f93aa4b02">This is technically the&nbsp;<strong class="markup--strong markup--p-strong">name</strong>&nbsp;of the index.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">&nbsp;Our original DataFrame had no name for its index. You can ignore this small detail for now. Subset selections will happen in the same fashion.</span></p>
+<h4 id="fd46" class="graf graf--h3 graf-after--p"><span class="markup--quote markup--h3-quote is-other" data-creator-ids="4b2977265d68">DataFrame column selection with&nbsp;</span><span class="markup--quote markup--h3-quote is-other" data-creator-ids="4b2977265d68 599f93aa4b02">dot&nbsp;notation</span></h4>
+<p id="0efe" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 b4e4830dc90d 2d881f9d540f">Pandas allows you to select&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 b4e4830dc90d 2d881f9d540f 6967b4f04cc">a</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 b4e4830dc90d 2d881f9d540f">&nbsp;single column&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="599f93aa4b02 b4e4830dc90d 2d881f9d540f 4a400865557d">as a Series by using&nbsp;<strong class="markup--strong markup--p-strong">dot notation</strong></span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 2d881f9d540f 4a400865557d">.&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 2d881f9d540f">This is also referred to as&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="b4e4830dc90d 2d881f9d540f 599f93aa4b02"><strong class="markup--strong markup--p-strong">attribute access</strong>.</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="2d881f9d540f">&nbsp;You simply place the name of the column without quotes following a dot and the DataFrame</span>&nbsp;like this:</p>
+<pre id="07c8" class="graf graf--pre graf-after--p">&gt;&gt;&gt; df.state<br /><code class="markup--code markup--pre-code">Jane         NY<br />Niko         TX<br />Aaron        FL<br />Penelope     AL<br />Dean         AK<br />Christina    TX<br />Cornelia     TX<br />Name: state, dtype: object</code></pre>
+<pre id="863e" class="graf graf--pre graf-after--pre">&gt;&gt;&gt; df.age<br /><code class="markup--code markup--pre-code">Jane         30<br />Niko          2<br />Aaron        12<br />Penelope      4<br />Dean         32<br />Christina    33<br />Cornelia     69<br />Name: age, dtype: int64</code></pre>
+<h4 id="ec3d" class="graf graf--h3 graf-after--pre">Pros and cons when selecting columns by attribute access</h4>
+<p id="a1cc" class="graf graf--p graf-after--h3"><span class="markup--quote markup--p-quote is-other" data-creator-ids="467819a0ea0a">The best benefit of selecting columns like this is that you get help when chaining methods after selection. For instance, if you place another dot after the column name and press&nbsp;<strong class="markup--strong markup--p-strong">tab</strong>,&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="467819a0ea0a 6aa7f6b5c5c">a list of all the Series methods will appear in a pop-up menu. It will look like this:</span></p>
+<figure id="5b37" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*-LvX7f1u0S8xRPXp_YLJfw.png" data-width="468" data-height="293" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="46"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*-LvX7f1u0S8xRPXp_YLJfw.png" data-src="https://cdn-images-1.medium.com/max/1600/1*-LvX7f1u0S8xRPXp_YLJfw.png" /></div>
+</div>
+</figure>
+<p id="316b" class="graf graf--p graf-after--figure">This help disappears when you use just the indexing operator:</p>
+<figure id="eac4" class="graf graf--figure graf-after--p">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*eV73GAR5_rkckmt_pGXAVQ.png" data-width="443" data-height="138" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="75" height="22"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*eV73GAR5_rkckmt_pGXAVQ.png" data-src="https://cdn-images-1.medium.com/max/1600/1*eV73GAR5_rkckmt_pGXAVQ.png" /></div>
+</div>
+</figure>
+<p id="95bb" class="graf graf--p graf-after--figure"><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">The biggest&nbsp;</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68 4a400865557d">drawback is that you cannot select columns that have spaces or other characters that are not valid</span><span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">&nbsp;as Python identifiers (variable names).</span></p>
+<h4 id="ab6e" class="graf graf--h3 graf-after--p">Selecting the same column&nbsp;twice?</h4>
+<p id="846c" class="graf graf--p graf-after--h3">This is rather peculiar, but&nbsp;<span class="markup--quote markup--p-quote is-other" data-creator-ids="4b2977265d68">you can actually select the same column more than once:</span></p>
+<pre id="fc7f" class="graf graf--pre graf-after--p">df[['age', 'age', 'age']]</pre>
+<figure id="93cc" class="graf graf--figure graf-after--pre">
+<div class="aspectRatioPlaceholder is-locked">
+<div class="aspectRatioPlaceholder-fill">&nbsp;</div>
+<div class="progressiveMedia js-progressiveMedia graf-image is-canvasLoaded is-imageLoaded" data-image-id="1*fEtloDbpCd9Z3qv_O1MCuQ.png" data-width="209" data-height="265" data-scroll="native"><canvas class="progressiveMedia-canvas js-progressiveMedia-canvas" width="59" height="75"></canvas><img class="progressiveMedia-image js-progressiveMedia-image" src="https://cdn-images-1.medium.com/max/1600/1*fEtloDbpCd9Z3qv_O1MCuQ.png" data-src="https://cdn-images-1.medium.com/max/1600/1*fEtloDbpCd9Z3qv_O1MCuQ.png" /></div>
+</div>
+</figure>
+<h3 id="8a2c" class="graf graf--h3 graf-after--figure">Summary of Part&nbsp;1</h3>
+<p id="028a" class="graf graf--p graf-after--h3">We covered an incredible amount of ground. Let&rsquo;s summarize all the main points:</p>
+<ul class="postList">
+<li id="aa86" class="graf graf--li graf-after--p">Before learning pandas, ensure you have the fundamentals of Python</li>
+<li id="ce22" class="graf graf--li graf-after--li">Always refer to the documentation when learning new pandas operations</li>
+<li id="c7c9" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="7d8db53a2d09">The&nbsp;</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="7d8db53a2d09 f7bcdd3ee552">DataFrame</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="7d8db53a2d09">&nbsp;and the&nbsp;</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="7d8db53a2d09 f7bcdd3ee552">Series</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="7d8db53a2d09">&nbsp;are the containers of data</span></li>
+<li id="20a7" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d f7bcdd3ee552">A DataFrame is two-dimensional, tabular data</span></li>
+<li id="3e96" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d">A Series is a single dimension of data</span></li>
+<li id="45f0" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="f7bcdd3ee552 7d8db53a2d09 b4e4830dc90d">The three components of a DataFrame are the&nbsp;<strong class="markup--strong markup--li-strong">index</strong>, the&nbsp;<strong class="markup--strong markup--li-strong">columns</strong>&nbsp;and the&nbsp;<strong class="markup--strong markup--li-strong">data</strong>&nbsp;(or&nbsp;<strong class="markup--strong markup--li-strong">values</strong>)</span></li>
+<li id="c2bc" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d 7d8db53a2d09">Each row and column of the DataFrame is referenced by both a&nbsp;<strong class="markup--strong markup--li-strong">label</strong>&nbsp;and an&nbsp;<strong class="markup--strong markup--li-strong">integer location</strong></span></li>
+<li id="0bee" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d 59c11c7589ac">There are three primary ways to select subsets from a DataFrame &mdash; <code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">[]</strong></code>,&nbsp;<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.loc</strong></code>&nbsp;and&nbsp;<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.iloc</strong></code></span></li>
+<li id="5c5b" class="graf graf--li graf-after--li">I use the&nbsp;<span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac">term&nbsp;<strong class="markup--strong markup--li-strong">just the indexing operator</strong>&nbsp;to refer to&nbsp;<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">[]</strong></code>&nbsp;immediately following a DataFrame/Series</span></li>
+<li id="4362" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac">Just the indexing operator&rsquo;s primary purpose is to select a column or columns from a DataFrame</span></li>
+<li id="7784" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="59c11c7589ac b4e4830dc90d">Using a single column name to just the indexing operator returns a single column of data as a Serie</span><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d">s</span></li>
+<li id="c58b" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d 59c11c7589ac">Passing multiple columns in a list to just the indexing operator returns a DataFrame</span></li>
+<li id="c864" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="7d8db53a2d09 b4e4830dc90d">A Series has two components, the&nbsp;<strong class="markup--strong markup--li-strong">index</strong>&nbsp;and the&nbsp;<strong class="markup--strong markup--li-strong">data</strong>&nbsp;(<strong class="markup--strong markup--li-strong">values</strong>). It has no columns</span></li>
+<li id="7dc9" class="graf graf--li graf-after--li"><code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.loc</strong></code>&nbsp;makes selections&nbsp;<strong class="markup--strong markup--li-strong">only by label</strong></li>
+<li id="680a" class="graf graf--li graf-after--li"><code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.loc</strong></code>&nbsp;can simultaneously select rows and columns</li>
+<li id="b30c" class="graf graf--li graf-after--li"><code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.loc</strong></code>&nbsp;can make selections with either a single label, a list of labels, or a slice of labels</li>
+<li id="cb9b" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d"><code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.loc</strong></code>&nbsp;makes row selections first followed by column selections:<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">df.loc[row_selection, col_selection]</strong></code></span></li>
+<li id="0425" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d"><code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.iloc</strong></code>&nbsp;is analogous to&nbsp;<strong class="markup--strong markup--li-strong">.</strong><code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">loc</strong></code>&nbsp;but uses only&nbsp;<strong class="markup--strong markup--li-strong">integer location</strong>&nbsp;to refer to rows or columns.</span></li>
+<li id="e9f1" class="graf graf--li graf-after--li"><code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.ix</strong></code>&nbsp;is deprecated and should never be used</li>
+<li id="af1b" class="graf graf--li graf-after--li"><code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.loc</strong></code>&nbsp;and&nbsp;<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.iloc</strong></code>&nbsp;work the same for Series except they only select based on the index as there are no columns</li>
+<li id="c9f8" class="graf graf--li graf-after--li">Pandas combines the power of python lists (selection via integer location) and dictionaries (selection by label)</li>
+<li id="52dd" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d">You can use just the indexing operator to select rows from a DataFrame, but I recommend against this and instead sticking with the explicit&nbsp;<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.loc</strong></code>and&nbsp;<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">.iloc</strong></code></span></li>
+<li id="4495" class="graf graf--li graf-after--li">Normally data is imported without setting an index. Use the&nbsp;<code class="markup--code markup--li-code"><strong class="markup--strong markup--li-strong">set_index</strong></code>method to use a column as an index.</li>
+<li id="c633" class="graf graf--li graf-after--li"><span class="markup--quote markup--li-quote is-other" data-creator-ids="b4e4830dc90d">You can select a single column as a Series from a DataFrame with dot notation</span></li>
+</ul>
+<h4 id="ce7d" class="graf graf--h3 graf-after--li">Way more to the&nbsp;story</h4>
+<p id="6e81" class="graf graf--p graf-after--h3">This is only part 1 of the serie<span class="markup--quote markup--p-quote is-other" data-creator-ids="24dee29a240b">s, so there is much more to cover on how to select subsets of data in pandas. Some of the ex</span>planations in this part will be expanded to include other possibilities.</p>
+<h3 id="c2f0" class="graf graf--h3 graf-after--p">Exercises</h3>
+<p id="9f49" class="graf graf--p graf-after--h3">This best way to learn pandas is to practice on your own. All these exercises will use the Chicago food inspections dataset found&nbsp;<a class="markup--anchor markup--p-anchor" href="https://data.world/cityofchicago/food-inspections-map" target="_blank" rel="nofollow  nofollow noopener noreferrer" data-href="https://data.world/cityofchicago/food-inspections-map">here at data.world</a>.</p>
+<ul class="postList">
+<li id="8582" class="graf graf--li graf-after--p">Download the&nbsp;<a class="markup--anchor markup--li-anchor" href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/01%20Selecting%20Subsets%20with%20%5B%20%5D%2C%20.loc%20and%20.iloc.ipynb" target="_blank" rel="nofollow noopener noreferrer" data-href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/01%20Selecting%20Subsets%20with%20%5B%20%5D%2C%20.loc%20and%20.iloc.ipynb">Jupyter Notebook</a>&nbsp;to get started on the exercises.</li>
+<li id="a755" class="graf graf--li graf-after--li">Make sure to&nbsp;<a class="markup--anchor markup--li-anchor" href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/Solutions.ipynb" target="_blank" rel="nofollow noopener noreferrer" data-href="https://github.com/tdpetrou/Learn-Pandas/blob/master/Learn-Pandas/Selecting%20Subsets/Solutions.ipynb">review the detailed solutions</a>&nbsp;as well after you attempt the exercises</li>
+</ul>
+<h3 id="b8ee" class="graf graf--h3 graf-after--li">Learn More</h3>
+<ul class="postList">
+<li id="5064" class="graf graf--li graf-after--p">Get the book&nbsp;<a class="markup--anchor markup--li-anchor" href="https://www.dunderdata.com/product-page/master-data-analysis-with-python-volume-1" target="_blank" rel="nofollow nofollow noopener noreferrer" data-href="https://www.dunderdata.com/product-page/master-data-analysis-with-python-volume-1">Master Data Analysis with Python</a>&nbsp;(300+ Exercises)</li>
+<li id="2172" class="graf graf--li graf-after--li">Sign-up for the&nbsp;<strong class="markup--strong markup--li-strong">FREE</strong>&nbsp;<a class="markup--anchor markup--li-anchor" href="https://online.dunderdata.com/courses/master-data-analysis-with-python-intro-to-pandas" target="_blank" rel="nofollow    nofollow  nofollow noopener noreferrer" data-href="https://online.dunderdata.com/courses/master-data-analysis-with-python-intro-to-pandas">Intro to Pandas class</a></li>
+</ul>
+    
+  </div>
+</div>
+
+
+
+</div>
+      </div>
+      <div id="section-blog_sidebar" data-section-id="blog_sidebar">
+  <div class="section__sidebar col-lg-3">
+    
+  </div>
+
+
+
+</div>
+    </div>
+  </div>
+</div>
+        <div id="section-footer" data-section-id="footer">
+
+
+<style>
+  .container--main {
+    background: #272d34;
+  }
+  .footer {
+    background: #272d34;
+  }
+  
+</style>
+
+  <footer class="footer footer--dark footer--left" kjb-settings-id="sections_footer_settings_background_color">
+    <div class="container">
+      <div class="footer__text-container">
+        
+        
+          <span kjb-settings-id="sections_footer_settings_copyright" class="footer__copyright">&copy; 2019 Dunder Data</span>
+        
+        
+        
+          <div kjb-settings-id="sections_footer_settings_menu" class="footer__menu">
+            
+              <a class="footer__menu-item" href="https://www.dunderdata.com/pages/terms">Terms</a>
+            
+              <a class="footer__menu-item" href="https://www.dunderdata.com/pages/privacy-policy">Privacy</a>
+            
+          </div>
+        
+      </div>
+      <!-- Section Variables -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- KJB Settings Variables -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .footer .social-icons__icon,
+  .footer .social-icons__icon:hover {
+    color: #ffffff;
+  }
+  .footer .social-icons--round .social-icons__icon ,
+  .footer .social-icons--square .social-icons__icon {
+    background-color: #27ae60;
+  }
+</style>
+
+
+  <div class="social-icons social-icons--none social-icons--left">
+    <div class="social-icons__row">
+      
+        <a class="social-icons__icon fa fa-facebook" href="https://www.facebook.com/dunderdata" kjb-settings-id="sections_footer_settings_social_icon_link_facebook"></a>
+      
+      
+        <a class="social-icons__icon fa fa-twitter" href="https://www.twitter.com/tedpetrou" kjb-settings-id="sections_footer_settings_social_icon_link_twitter"></a>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+        <a class="social-icons__icon fa fa-linkedin" href="linkedin.com/company/dunderdata" kjb-settings-id="sections_footer_settings_social_icon_link_linkedin"></a>
+      
+      
+      
+      
+      
+      
+      
+    </div>
+  </div>
+
+
+    </div>
+  </footer>
+
+
+</div>
+      </div>
+    </div>
+    
+      <div id="section-pop_exit" data-section-id="pop_exit">
+
+  
+
+
+
+  
+
+
+</div>
+    
+    <div id="section-pop_two_step" data-section-id="pop_two_step">
+
+
+
+
+
+
+  
+
+
+<style>
+  #two-step {
+    display: none;
+    /*============================================================================
+      #Background Color Override
+    ==============================================================================*/
+    
+      /*============================================================================
+        #Text Color Override
+      ==============================================================================*/
+      color: ;
+    
+  }
+</style>
+
+<div id="two-step" class="pop pop--light">
+  <div class="pop__content">
+    <div class="pop__inner">
+      <div class="pop__body" style="background: #fff;">
+        <a class="pop__close">
+          Close
+        </a>
+        
+          <img src="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/assets/two_step.jpg?15776651586601868" class="img-fluid" kjb-settings-id="sections_pop_two_step_settings_image"/>
+        
+        <div class="pop__body--inner">
+          
+            <div class="block--1492725498873">
+              
+                  
+
+
+
+
+<style>
+  .block--1492725498873 .progress-wrapper .progress-bar {
+    width: 50%;
+    background-color: #27ae60;
+  }
+  .block--1492725498873 .progress-wrapper .progress {
+    background-color: #f9f9f9;
+  }
+</style>
+
+<div class="progress-wrapper" kjb-settings-id="sections_pop_two_step_blocks_1492725498873_settings_show_progress">
+  <p class="progress-percent" kjb-settings-id="sections_pop_two_step_blocks_1492725498873_settings_progress_text">50% Complete</p>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped" kjb-settings-id="sections_pop_two_step_blocks_1492725498873_settings_progress_percent"></div>
+  </div>
+</div>
+
+                
+            </div>
+          
+            <div class="block--1492725503624">
+              
+                  <div kjb-settings-id="sections_pop_two_step_blocks_1492725503624_settings_text">
+  <h3>Register for a free account</h3>
+<p>Upon registration, you'll get access to three free courses and the discount code to purchase the All Access Pass for 50% off through Cyber Monday (12/2)</p>
+</div>
+
+              
+            </div>
+          
+          
+  <form data-parsley-validate="true" data-kjb-disable-on-submit="true" action="https://www.dunderdata.com/forms/228647/form_submissions" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="LPJLSLLoOeRglcgIJbsYHbp8dYCXUno7dn6dW6KqhcsBSTBh2iY6WW7OaG29rgF5ZIEVfFeYceN7eC4MtIljVA==" /><input type="text" name="website_url" autofill="off" placeholder="Skip this field" style="display: none;" /><input type="hidden" name="kjb_fk_checksum" autofill="off" value="c74bf661d2945a96aa75396a249e8275" />
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <style>
+      /*============================================================================
+        #Individual CTA Style
+      ==============================================================================*/
+      .btn--sections_pop_two_step_settings_btn_text.btn--solid {
+        background: #27ae60;
+        border-color: #27ae60;
+        color: #fff;
+      }
+      .btn--sections_pop_two_step_settings_btn_text.btn--outline {
+        border-color: #27ae60;
+        color: #27ae60;
+      }
+    </style>
+    <div class="pop__form" kjb-settings-id="sections_pop_two_step_settings_form">
+      <input type="hidden" name="thank_you_url" value="">
+      <div class="row optin optin--stacked">
+        
+          <div class="col-sm-12">
+            <div class="email-field form-group"><input required="required" class="form-control" placeholder="Email" data-parsley-remote="true" data-parsley-remote-validator="kjb_email_validator" data-parsley-remote-message="false" type="email" name="form_submission[email]" id="form_submission_email" /></div>
+          </div>
+        
+        <div class="col-sm-12">
+          <button class="btn btn--sections_pop_two_step_settings_btn_text btn--auto btn--solid btn-form" id="form-button" type="submit" kjb-settings-id="sections_pop_two_step_settings_btn_text">Submit</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+    <!-- Javascripts ================================================== -->
+    <script src="https://ap-kajabi-storefronts-production.global.ssl.fastly.net/assets/core-bd7869093471de8f4a806e4479857a9e307129ee6fedf20d1571456adf802e50.js"></script>
+    <script charset='ISO-8859-1' src='https://fast.wistia.com/assets/external/E-v1.js'></script>
+    <script charset='ISO-8859-1' src='https://fast.wistia.com/labs/crop-fill/plugin.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ouibounce/0.0.12/ouibounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
+    <script src="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/1033380/assets/scripts.js?15776651586601868"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.8/js/tether.min.js"></script><!-- Tether for Bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="sha384-VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
+    
+      <script id="dsq-count-scr" src="//.disqus.com/count.js" async=""></script>
+    
+  </body>
+</html>
